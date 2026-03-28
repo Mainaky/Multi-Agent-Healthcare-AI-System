@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CareFlow — Clinical AI Orchestration</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --surface: #111827;
+    --card: #1a2236;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --label: #94a3b8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(11,15,26,0.95);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    background: linear-gradient(90deg, var(--accent), #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .logo-sub {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: -2px;
+  }
+  .header-status {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent3);
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    background: var(--accent3);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
+  /* ── Layout ── */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 320px;
+    flex: 1;
+    overflow: hidden;
+    height: calc(100vh - 65px);
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 20px 0;
+  }
+  .sidebar-title {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 0 20px 12px;
+  }
+  .patient-card {
+    padding: 14px 20px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .patient-card:hover { background: var(--card); }
+  .patient-card.active {
+    background: rgba(0,212,255,0.06);
+    border-left-color: var(--accent);
+  }
+  .patient-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .patient-meta {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .risk-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .risk-bar-bg {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .risk-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.6s ease;
+  }
+  .risk-label {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    min-width: 30px;
+  }
+
+  /* ── Main Panel ── */
+  .main-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Patient Header ── */
+  .patient-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .patient-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .patient-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .badge {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 99px;
+    border: 1px solid;
+  }
+  .badge-condition { color: #93c5fd; border-color: #1e40af; background: rgba(30,64,175,0.15); }
+  .badge-risk-low { color: var(--accent3); border-color: var(--accent3); background: rgba(16,185,129,0.1); }
+  .badge-risk-med { color: var(--warn); border-color: var(--warn); background: rgba(245,158,11,0.1); }
+  .badge-risk-high { color: #fb923c; border-color: #fb923c; background: rgba(251,146,60,0.1); }
+  .badge-risk-crit { color: var(--danger); border-color: var(--danger); background: rgba(239,68,68,0.1); }
+
+  /* ── Stats Row ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-cell {
+    background: var(--surface);
+    padding: 14px 20px;
+    text-align: center;
+  }
+  .stat-val {
+    font-size: 22px;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .stat-key {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  /* ── Query Area ── */
+  .query-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ── Messages ── */
+  .msg {
+    display: flex;
+    gap: 12px;
+    animation: fadeUp 0.3s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(12px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+  .msg-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .msg-user .msg-icon { background: var(--accent2); }
+  .msg-agent .msg-icon { background: linear-gradient(135deg, #0891b2, #7c3aed); }
+  .msg-body { flex: 1; }
+  .msg-meta {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 6px;
+  }
+  .msg-bubble {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .msg-user .msg-bubble {
+    background: rgba(124,58,237,0.12);
+    border-color: rgba(124,58,237,0.3);
+  }
+
+  /* ── Routing Badge ── */
+  .routing-card {
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  .routing-label {
+    font-size: 11px;
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .routing-agent {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .routing-reason {
+    font-size: 12px;
+    color: var(--label);
+    flex-basis: 100%;
+    margin-top: 4px;
+  }
+
+  /* ── Response blocks ── */
+  .resp-section {
+    margin-top: 12px;
+    padding: 14px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .resp-section-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 8px;
+  }
+  .resp-list { list-style: none; }
+  .resp-list li {
+    padding: 5px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .resp-list li:last-child { border-bottom: none; }
+  .resp-list li::before {
+    content: '▸';
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .eval-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .eval-chip {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--label);
+  }
+  .eval-chip span { color: var(--accent3); }
+
+  /* ── Input Bar ── */
+  .input-bar {
+    padding: 16px 28px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .input-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  textarea {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    resize: none;
+    height: 48px;
+    max-height: 120px;
+    outline: none;
+    transition: border-color 0.2s;
+    overflow-y: auto;
+  }
+  textarea:focus { border-color: var(--accent); }
+  textarea::placeholder { color: var(--muted); }
+  .send-btn {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: opacity 0.2s, transform 0.1s;
+    flex-shrink: 0;
+  }
+  .send-btn:hover { opacity: 0.85; }
+  .send-btn:active { transform: scale(0.95); }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .quick-prompts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .qp-btn {
+    font-size: 11px;
+    padding: 5px 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    color: var(--label);
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.2s;
+  }
+  .qp-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,212,255,0.05);
+  }
+
+  /* ── Right Panel ── */
+  .right-panel {
+    border-left: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .panel-section-title {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+
+  /* Agents */
+  .agent-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .agent-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .agent-item.active-agent {
+    border-color: var(--accent);
+    background: rgba(0,212,255,0.06);
+  }
+  .agent-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .agent-info { flex: 1; min-width: 0; }
+  .agent-name { font-size: 12px; font-weight: 500; }
+  .agent-desc { font-size: 10px; color: var(--muted); }
+  .agent-count {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    background: var(--border);
+    padding: 2px 7px;
+    border-radius: 99px;
+  }
+
+  /* Labs */
+  .lab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .lab-cell {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .lab-key { font-size: 10px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+  .lab-val { font-size: 16px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; margin-top: 2px; }
+  .lab-val.warn { color: var(--warn); }
+  .lab-val.danger { color: var(--danger); }
+  .lab-val.ok { color: var(--accent3); }
+
+  /* Care gaps */
+  .gap-list { list-style: none; }
+  .gap-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .gap-item:last-child { border-bottom: none; }
+  .gap-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--warn);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  /* Loading */
+  .loading-msg {
+    display: flex;
+    gap: 12px;
+    padding: 16px 0;
+  }
+  .loading-dots span {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  /* Eval dashboard */
+  .eval-summary {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .eval-metric { display: flex; justify-content: space-between; padding: 5px 0; font-size: 12px; }
+  .eval-metric-val { font-family: 'IBM Plex Mono', monospace; color: var(--accent3); }
+
+  /* Welcome state */
+  .welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: var(--muted);
+    gap: 12px;
+    padding: 40px;
+  }
+  .welcome-icon { font-size: 48px; }
+  .welcome-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--label); }
+  .welcome-sub { font-size: 13px; line-height: 1.6; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">🏥</div>
+    <div>
+      <div class="logo-text">CareFlow</div>
+      <div class="logo-sub">Multi-Agent Clinical Orchestration</div>
+    </div>
+  </div>
+  <div class="header-status">
+    <div class="status-dot"></div>
+    <span id="api-status">Connecting to backend...</span>
+  </div>
+</header>
+
+<!-- ── Main Layout ── -->
+<div class="main-layout">
+
+  <!-- ── Left Sidebar: Patient List ── -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Patients</div>
+    <div id="patient-list">
+      <div style="padding:20px;color:var(--muted);font-size:13px;">Loading patients...</div>
+    </div>
+  </aside>
+
+  <!-- ── Center: Query + Conversation ── -->
+  <main class="main-panel">
+    <div id="patient-header-area" style="display:none">
+      <div class="patient-header">
+        <div class="patient-title" id="hdr-name"></div>
+        <div style="font-size:13px;color:var(--muted)" id="hdr-meta"></div>
+        <div class="patient-badges" id="hdr-badges"></div>
+      </div>
+      <div class="stats-row" id="stats-row"></div>
+    </div>
+
+    <div class="query-area" id="query-area">
+      <div class="welcome" id="welcome-state">
+        <div class="welcome-icon">🤖</div>
+        <div class="welcome-title">Select a patient to begin</div>
+        <div class="welcome-sub">CareFlow will route your query to the most appropriate AI agent — Patient Navigator, Care Coordinator, Quality Analyst, or AI Nurse.</div>
+      </div>
+    </div>
+
+    <div class="input-bar" id="input-bar" style="display:none">
+      <div class="quick-prompts" id="quick-prompts"></div>
+      <div class="input-row">
+        <textarea id="query-input" placeholder="Describe the clinical situation or ask about this patient..." rows="1"
+          onkeydown="handleKey(event)"></textarea>
+        <button class="send-btn" id="send-btn" onclick="sendQuery()">➤</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── Right Panel ── -->
+  <aside class="right-panel">
+    <div>
+      <div class="panel-section-title">AI Agents</div>
+      <div class="agent-grid" id="agent-grid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <div id="labs-section" style="display:none">
+      <div class="panel-section-title">Lab Results</div>
+      <div class="lab-grid" id="labs-grid"></div>
+    </div>
+
+    <div id="gaps-section" style="display:none">
+      <div class="panel-section-title">Care Gaps</div>
+      <ul class="gap-list" id="gap-list"></ul>
+    </div>
+
+    <div id="eval-section">
+      <div class="panel-section-title">Evaluation Metrics</div>
+      <div class="eval-summary" id="eval-summary">
+        <div style="font-size:12px;color:var(--muted)">No queries yet. Metrics will appear after first query.</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+const API = 'http://localhost:8001';
+
+const AGENTS = [
+  { id: 'patient_navigator', name: 'Patient Navigator', desc: 'Scheduling, refills, follow-ups', color: '#00d4ff', emoji: '🗓️' },
+  { id: 'care_coordinator',  name: 'Care Coordinator',  desc: 'Referrals, care gap closure',    color: '#7c3aed', emoji: '🔗' },
+  { id: 'quality_analyst',   name: 'Quality & Risk',    desc: 'Risk scoring, compliance gaps',  color: '#f59e0b', emoji: '📊' },
+  { id: 'ai_nurse',          name: 'AI Nurse',           desc: 'Meds, adherence, clinical prep', color: '#10b981', emoji: '💊' },
+];
+
+const QUICK_PROMPTS = {
+  P001: ["HbA1c is uncontrolled at 8.2, what should we do?", "Patient missed 2 follow-ups, reschedule", "BP at 145/92 — flag risk and suggest action"],
+  P002: ["Spirometry test is overdue, coordinate this", "Patient reports increased stress, assess mental health gap", "Prepare visit notes for next appointment"],
+  P003: ["eGFR declining — needs nephrology referral urgently", "BNP is 820, assess CHF risk", "Patient lives alone — coordinate social support"],
+  P004: ["Hemoglobin is 9.8, review iron therapy", "Nutritionist referral is pending — coordinate", "Patient wants fertility counseling — navigate next steps"],
+  P005: ["Cardiac rehab enrollment is pending — coordinate", "Patient is a smoker post-MI — flag and plan cessation", "Stress test not scheduled — navigate booking"],
+};
+
+let selectedPatient = null;
+let agentUsage = {};
+let messages = [];
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+async function boot() {
+  renderAgentGrid();
+  try {
+    const res = await fetch(`${API}/patients`);
+    if (!res.ok) throw new Error();
+    const patients = await res.json();
+    renderPatientList(patients);
+    document.getElementById('api-status').textContent = 'Backend connected ✓';
+  } catch {
+    document.getElementById('api-status').textContent = 'Backend offline — start uvicorn';
+    document.getElementById('api-status').style.color = '#ef4444';
+    document.getElementById('patient-list').innerHTML = '<div style="padding:20px;color:#ef4444;font-size:12px;">Cannot reach backend.<br>Make sure uvicorn is running on port 8000.</div>';
+  }
+}
+
+function renderPatientList(patients) {
+  const el = document.getElementById('patient-list');
+  el.innerHTML = patients.map(p => {
+    const riskColor = p.risk_score > 0.8 ? '#ef4444' : p.risk_score > 0.6 ? '#fb923c' : p.risk_score > 0.4 ? '#f59e0b' : '#10b981';
+    return `<div class="patient-card" id="pc-${p.id}" onclick="selectPatient('${p.id}')">
+      <div class="patient-name">${p.name}</div>
+      <div class="patient-meta">${p.age}y • ${p.condition}</div>
+      <div class="risk-bar-wrap">
+        <div class="risk-bar-bg">
+          <div class="risk-bar-fill" style="width:${p.risk_score*100}%;background:${riskColor}"></div>
+        </div>
+        <div class="risk-label" style="color:${riskColor}">${Math.round(p.risk_score*100)}%</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderAgentGrid(activeId = null) {
+  const el = document.getElementById('agent-grid');
+  el.innerHTML = AGENTS.map(a => `
+    <div class="agent-item ${activeId === a.id ? 'active-agent' : ''}" id="ag-${a.id}">
+      <div class="agent-dot" style="background:${a.color}"></div>
+      <div class="agent-info">
+        <div class="agent-name">${a.emoji} ${a.name}</div>
+        <div class="agent-desc">${a.desc}</div>
+      </div>
+      <div class="agent-count">${agentUsage[a.id] || 0}</div>
+    </div>`).join('');
+}
+
+async function selectPatient(id) {
+  document.querySelectorAll('.patient-card').forEach(el => el.classList.remove('active'));
+  document.getElementById('pc-' + id)?.classList.add('active');
+
+  try {
+    const res = await fetch(`${API}/patients/${id}`);
+    const p = await res.json();
+    selectedPatient = p;
+    messages = [];
+    renderPatientHeader(p);
+    renderLabs(p);
+    renderGaps(p);
+    renderQuickPrompts(id);
+    clearConversation();
+    document.getElementById('input-bar').style.display = 'block';
+    document.getElementById('patient-header-area').style.display = 'block';
+  } catch {
+    alert('Could not load patient data. Is the backend running?');
+  }
+}
+
+function renderPatientHeader(p) {
+  document.getElementById('hdr-name').textContent = p.name;
+  document.getElementById('hdr-meta').textContent = `${p.age} years • ${p.gender} • ${p.insurance}`;
+  const risk = p.risk_score;
+  const riskClass = risk > 0.8 ? 'badge-risk-crit' : risk > 0.6 ? 'badge-risk-high' : risk > 0.4 ? 'badge-risk-med' : 'badge-risk-low';
+  const riskLabel = risk > 0.8 ? 'Critical Risk' : risk > 0.6 ? 'High Risk' : risk > 0.4 ? 'Medium Risk' : 'Low Risk';
+  document.getElementById('hdr-badges').innerHTML =
+    `<span class="badge badge-condition">${p.condition}</span>
+     <span class="badge ${riskClass}">${riskLabel} (${Math.round(risk*100)}%)</span>
+     <span class="badge" style="color:var(--muted);border-color:var(--border)">Last visit: ${p.last_visit}</span>`;
+
+  const labs = p.lab_results;
+  const bp = labs.BP || '—';
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-cell"><div class="stat-val" style="color:${p.risk_score > 0.6 ? '#ef4444' : '#10b981'}">${Math.round(p.risk_score*100)}%</div><div class="stat-key">Risk Score</div></div>
+    <div class="stat-cell"><div class="stat-val" style="color:${p.missed_followups > 1 ? '#f59e0b' : '#10b981'}">${p.missed_followups}</div><div class="stat-key">Missed Follow-ups</div></div>
+    <div class="stat-cell"><div class="stat-val" style="color:#93c5fd">${p.care_gaps.length}</div><div class="stat-key">Care Gaps</div></div>
+    <div class="stat-cell"><div class="stat-val" style="color:var(--muted)">${p.medications.length}</div><div class="stat-key">Medications</div></div>`;
+}
+
+function renderLabs(p) {
+  const labs = p.lab_results;
+  const labEl = document.getElementById('labs-grid');
+  labEl.innerHTML = Object.entries(labs).map(([k, v]) => {
+    let cls = 'ok';
+    if (k === 'HbA1c' && v > 8) cls = 'danger';
+    if (k === 'BP' && v) cls = 'warn';
+    if (k === 'BNP' && v > 400) cls = 'danger';
+    if (k === 'eGFR' && v < 30) cls = 'danger';
+    if (k === 'Hemoglobin' && v < 12) cls = 'warn';
+    return `<div class="lab-cell"><div class="lab-key">${k}</div><div class="lab-val ${cls}">${v}</div></div>`;
+  }).join('');
+  document.getElementById('labs-section').style.display = 'block';
+}
+
+function renderGaps(p) {
+  const el = document.getElementById('gap-list');
+  el.innerHTML = p.care_gaps.map(g =>
+    `<li class="gap-item"><div class="gap-dot"></div><span>${g}</span></li>`
+  ).join('');
+  document.getElementById('gaps-section').style.display = 'block';
+}
+
+function renderQuickPrompts(pid) {
+  const prompts = QUICK_PROMPTS[pid] || [];
+  document.getElementById('quick-prompts').innerHTML = prompts.map(q =>
+    `<button class="qp-btn" onclick="setQuery(this)">${q}</button>`
+  ).join('');
+}
+
+function setQuery(btn) {
+  document.getElementById('query-input').value = btn.textContent;
+}
+
+function clearConversation() {
+  const qa = document.getElementById('query-area');
+  qa.innerHTML = '<div class="welcome" id="welcome-state"><div class="welcome-icon">💬</div><div class="welcome-title">Ask about this patient</div><div class="welcome-sub">Use quick prompts above or describe the clinical situation in your own words.</div></div>';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendQuery();
+  }
+}
+
+async function sendQuery() {
+  const input = document.getElementById('query-input');
+  const query = input.value.trim();
+  if (!query || !selectedPatient) return;
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true;
+  input.value = '';
+
+  // Remove welcome if present
+  document.getElementById('welcome-state')?.remove();
+
+  const qa = document.getElementById('query-area');
+
+  // User message
+  appendMsg(qa, 'user', '👤', 'You', `<p>${escHtml(query)}</p>`);
+
+  // Loading
+  const loadId = 'load-' + Date.now();
+  qa.insertAdjacentHTML('beforeend', `
+    <div class="loading-msg" id="${loadId}">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#0891b2,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🤖</div>
+      <div style="display:flex;align-items:center;gap:8px;padding-top:8px">
+        <div class="loading-dots"><span></span><span></span><span></span></div>
+        <span style="font-size:12px;color:var(--muted)">Routing query to best agent...</span>
+      </div>
+    </div>`);
+  qa.scrollTop = qa.scrollHeight;
+
+  try {
+    const res = await fetch(`${API}/query`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ patient_id: selectedPatient.id, query })
+    });
+
+    document.getElementById(loadId)?.remove();
+
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+
+    const orch = data.orchestrator;
+    const agentResp = data.agent_response;
+    const evalData = data.evaluation;
+
+    // Update agent usage
+    agentUsage[orch.selected_agent] = (agentUsage[orch.selected_agent] || 0) + 1;
+    renderAgentGrid(orch.selected_agent);
+
+    const agentInfo = AGENTS.find(a => a.id === orch.selected_agent) || AGENTS[1];
+    const urgColor = orch.urgency === 'critical' ? '#ef4444' : orch.urgency === 'high' ? '#fb923c' : orch.urgency === 'medium' ? '#f59e0b' : '#10b981';
+
+    let body = `
+    <div class="routing-card">
+      <div>
+        <div class="routing-label">Routed to</div>
+        <div class="routing-agent">${agentInfo.emoji} ${agentInfo.name}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="font-size:11px;font-family:'IBM Plex Mono',monospace;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:${urgColor}">${orch.urgency?.toUpperCase() || 'MEDIUM'}</span>
+        <span style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--accent3)">${Math.round((orch.confidence||0.8)*100)}% confident</span>
+      </div>
+      <div class="routing-reason">${escHtml(orch.routing_reason || '')}</div>
+    </div>`;
+
+    // Render agent-specific response
+    body += renderAgentResponse(orch.selected_agent, agentResp);
+
+    // Guidelines
+    if (data.guidelines_used?.length) {
+      body += `<div class="resp-section"><div class="resp-section-title">📚 Clinical Guidelines Used</div>
+        <ul class="resp-list">${data.guidelines_used.map(g => `<li>${escHtml(g)}</li>`).join('')}</ul></div>`;
+    }
+
+    // Eval
+    body += `<div class="eval-row">
+      <div class="eval-chip">⏱ Latency: <span>${evalData.latency_ms}ms</span></div>
+      <div class="eval-chip">✅ Completion: <span>${evalData.task_completion}</span></div>
+      <div class="eval-chip">🎯 Confidence: <span>${Math.round((evalData.confidence||0.8)*100)}%</span></div>
+    </div>`;
+
+    appendMsg(qa, 'agent', '🤖', 'CareFlow', body);
+    updateEvalSummary();
+
+  } catch (err) {
+    document.getElementById(loadId)?.remove();
+    appendMsg(qa, 'agent', '⚠️', 'Error', `<p style="color:#ef4444">${escHtml(err.message)}</p>`);
+  }
+
+  btn.disabled = false;
+  qa.scrollTop = qa.scrollHeight;
+}
+
+function renderAgentResponse(agentId, resp) {
+  let html = '';
+
+  if (resp.action_taken) {
+    html += `<div class="resp-section"><div class="resp-section-title">Action Taken</div><p style="font-size:13px;line-height:1.7">${escHtml(resp.action_taken)}</p></div>`;
+  }
+
+  if (agentId === 'patient_navigator') {
+    if (resp.steps?.length) html += listSection('Steps', resp.steps);
+    if (resp.patient_message) html += `<div class="resp-section"><div class="resp-section-title">💬 Patient Message</div><p style="font-size:13px;color:#93c5fd;font-style:italic;line-height:1.7">"${escHtml(resp.patient_message)}"</p></div>`;
+    if (resp.next_appointment) html += `<div class="resp-section"><div class="resp-section-title">📅 Next Appointment</div><p style="font-size:13px">${escHtml(resp.next_appointment)}</p></div>`;
+  }
+
+  if (agentId === 'care_coordinator') {
+    if (resp.referrals?.length) html += listSection('Referrals Generated', resp.referrals);
+    if (resp.care_gaps_addressed?.length) html += listSection('Care Gaps Addressed', resp.care_gaps_addressed);
+    if (resp.task_assignments?.length) {
+      const tasks = resp.task_assignments.map(t => `${t.role}: ${t.task} (${t.deadline})`);
+      html += listSection('Task Assignments', tasks);
+    }
+    if (resp.follow_up_plan) html += `<div class="resp-section"><div class="resp-section-title">Follow-up Plan</div><p style="font-size:13px;line-height:1.7">${escHtml(resp.follow_up_plan)}</p></div>`;
+  }
+
+  if (agentId === 'quality_analyst') {
+    const ra = resp.risk_assessment;
+    if (ra) {
+      const lvlColor = ra.level === 'critical' ? '#ef4444' : ra.level === 'high' ? '#fb923c' : ra.level === 'medium' ? '#f59e0b' : '#10b981';
+      html += `<div class="resp-section"><div class="resp-section-title">Risk Assessment</div>
+        <p style="font-size:20px;font-family:'IBM Plex Mono',monospace;color:${lvlColor}">${Math.round((ra.score||0)*100)}% <span style="font-size:12px">${ra.level?.toUpperCase()}</span></p>
+        ${ra.primary_drivers?.length ? `<p style="font-size:12px;color:var(--muted);margin-top:6px">Drivers: ${ra.primary_drivers.join(', ')}</p>` : ''}
+      </div>`;
+    }
+    if (resp.quality_gaps?.length) {
+      const gaps = resp.quality_gaps.map(g => `[${g.priority?.toUpperCase() || 'MED'}] ${g.measure}: ${g.gap}`);
+      html += listSection('Quality Gaps', gaps);
+    }
+    if (resp.safety_flags?.length) html += listSection('⚠️ Safety Flags', resp.safety_flags);
+    if (resp.recommended_interventions?.length) html += listSection('Recommended Interventions', resp.recommended_interventions);
+  }
+
+  if (agentId === 'ai_nurse') {
+    const mr = resp.medication_review;
+    if (mr) {
+      if (mr.adherence_issues?.length) html += listSection('Medication Adherence Issues', mr.adherence_issues);
+      if (mr.interaction_flags?.length) html += listSection('⚠️ Drug Interactions', mr.interaction_flags);
+      if (mr.refill_needed?.length) html += listSection('Refills Needed', mr.refill_needed);
+    }
+    if (resp.vital_interpretation) html += `<div class="resp-section"><div class="resp-section-title">Vital Interpretation</div><p style="font-size:13px;line-height:1.7">${escHtml(resp.vital_interpretation)}</p></div>`;
+    if (resp.patient_education) html += `<div class="resp-section"><div class="resp-section-title">Patient Education</div><p style="font-size:13px;line-height:1.7">${escHtml(resp.patient_education)}</p></div>`;
+    if (resp.follow_up_tasks?.length) html += listSection('Follow-up Tasks', resp.follow_up_tasks);
+    if (resp.visit_prep_notes) html += `<div class="resp-section"><div class="resp-section-title">Visit Prep Notes</div><p style="font-size:13px;line-height:1.7">${escHtml(resp.visit_prep_notes)}</p></div>`;
+  }
+
+  return html || `<div class="resp-section"><p style="font-size:13px;color:var(--muted)">Agent response received. See raw data in /eval/logs.</p></div>`;
+}
+
+function listSection(title, items) {
+  return `<div class="resp-section"><div class="resp-section-title">${escHtml(title)}</div>
+    <ul class="resp-list">${items.map(i => `<li>${escHtml(String(i))}</li>`).join('')}</ul></div>`;
+}
+
+function appendMsg(container, type, icon, sender, bodyHtml) {
+  const now = new Date().toLocaleTimeString();
+  container.insertAdjacentHTML('beforeend', `
+    <div class="msg msg-${type}">
+      <div class="msg-icon">${icon}</div>
+      <div class="msg-body">
+        <div class="msg-meta">${escHtml(sender)} · ${now}</div>
+        <div class="msg-bubble">${bodyHtml}</div>
+      </div>
+    </div>`);
+  container.scrollTop = container.scrollHeight;
+}
+
+async function updateEvalSummary() {
+  try {
+    const res = await fetch(`${API}/eval/summary`);
+    const data = await res.json();
+    if (data.message) return;
+    const el = document.getElementById('eval-summary');
+    el.innerHTML = `
+      <div class="eval-metric"><span>Total Queries</span><span class="eval-metric-val">${data.total_queries}</span></div>
+      <div class="eval-metric"><span>Avg Latency</span><span class="eval-metric-val">${data.avg_latency_ms}ms</span></div>
+      <div class="eval-metric"><span>Avg Confidence</span><span class="eval-metric-val">${Math.round(data.avg_confidence*100)}%</span></div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:8px 0"/>
+      <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Agent Usage</div>
+      ${Object.entries(data.agent_usage||{}).map(([k,v]) => `<div class="eval-metric"><span style="font-size:11px">${AGENTS.find(a=>a.id===k)?.name||k}</span><span class="eval-metric-val">${v}</span></div>`).join('')}`;
+  } catch {}
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+boot();
+</script>
+</body>
+</html>

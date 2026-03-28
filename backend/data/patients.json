@@ -1,0 +1,132 @@
+[
+  {
+    "id": "P001",
+    "name": "Arjun Sharma",
+    "age": 58,
+    "gender": "Male",
+    "condition": "Type 2 Diabetes + Hypertension",
+    "last_visit": "2025-12-10",
+    "next_appointment": null,
+    "medications": ["Metformin 500mg", "Amlodipine 5mg"],
+    "lab_results": {
+      "HbA1c": 8.2,
+      "BP": "145/92",
+      "Creatinine": 1.1,
+      "LDL": 140
+    },
+    "vitals": {
+      "weight_kg": 82,
+      "height_cm": 170,
+      "BMI": 28.4
+    },
+    "missed_followups": 2,
+    "insurance": "Apollo Munich Gold",
+    "care_gaps": ["HbA1c > 8 uncontrolled", "BP not at target", "Annual eye exam overdue"],
+    "risk_score": 0.74,
+    "notes": "Patient reports occasional dizziness. Reluctant to increase medication dosage."
+  },
+  {
+    "id": "P002",
+    "name": "Priya Nair",
+    "age": 34,
+    "gender": "Female",
+    "condition": "Asthma + Anxiety",
+    "last_visit": "2026-01-22",
+    "next_appointment": "2026-04-15",
+    "medications": ["Salbutamol inhaler", "Fluticasone inhaler", "Sertraline 50mg"],
+    "lab_results": {
+      "SpO2": 97,
+      "PeakFlow": 380,
+      "CBC": "Normal"
+    },
+    "vitals": {
+      "weight_kg": 58,
+      "height_cm": 162,
+      "BMI": 22.1
+    },
+    "missed_followups": 0,
+    "insurance": "Star Health",
+    "care_gaps": ["Spirometry test due", "Mental health check overdue 3 months"],
+    "risk_score": 0.31,
+    "notes": "Patient compliant with medications. Reports increased stress at work."
+  },
+  {
+    "id": "P003",
+    "name": "Ramesh Gupta",
+    "age": 72,
+    "gender": "Male",
+    "condition": "CHF + CKD Stage 3",
+    "last_visit": "2025-11-05",
+    "next_appointment": null,
+    "medications": ["Furosemide 40mg", "Carvedilol 12.5mg", "Losartan 50mg", "Atorvastatin 20mg"],
+    "lab_results": {
+      "BNP": 820,
+      "Creatinine": 2.4,
+      "eGFR": 28,
+      "Potassium": 5.1,
+      "Sodium": 136
+    },
+    "vitals": {
+      "weight_kg": 78,
+      "height_cm": 165,
+      "BMI": 28.7
+    },
+    "missed_followups": 3,
+    "insurance": "Government CGHS",
+    "care_gaps": ["BNP elevated - CHF worsening", "eGFR declining - nephrology referral needed", "Weight monitoring not done"],
+    "risk_score": 0.91,
+    "notes": "High-risk patient. Lives alone. Caregiver support unavailable. Last ED visit 45 days ago."
+  },
+  {
+    "id": "P004",
+    "name": "Sneha Iyer",
+    "age": 27,
+    "gender": "Female",
+    "condition": "PCOS + Iron Deficiency Anemia",
+    "last_visit": "2026-02-14",
+    "next_appointment": "2026-03-30",
+    "medications": ["Ferrous Sulfate 325mg", "Metformin 500mg", "Oral Contraceptive"],
+    "lab_results": {
+      "Hemoglobin": 9.8,
+      "Ferritin": 6,
+      "TSH": 2.1,
+      "Testosterone": 0.8
+    },
+    "vitals": {
+      "weight_kg": 68,
+      "height_cm": 158,
+      "BMI": 27.2
+    },
+    "missed_followups": 1,
+    "insurance": "Religare Health",
+    "care_gaps": ["Hemoglobin still below normal", "Nutritionist referral pending", "Follow-up ultrasound not scheduled"],
+    "risk_score": 0.42,
+    "notes": "Patient interested in fertility counseling. Requests female doctor preference."
+  },
+  {
+    "id": "P005",
+    "name": "Vikram Mehta",
+    "age": 45,
+    "gender": "Male",
+    "condition": "Post-MI Recovery",
+    "last_visit": "2026-01-08",
+    "next_appointment": "2026-04-08",
+    "medications": ["Aspirin 75mg", "Clopidogrel 75mg", "Ramipril 5mg", "Rosuvastatin 20mg"],
+    "lab_results": {
+      "Troponin": 0.01,
+      "LDL": 98,
+      "EF": 42,
+      "BP": "128/82"
+    },
+    "vitals": {
+      "weight_kg": 88,
+      "height_cm": 175,
+      "BMI": 28.7
+    },
+    "missed_followups": 0,
+    "insurance": "Bajaj Allianz",
+    "care_gaps": ["Cardiac rehab enrollment pending", "Stress test not scheduled", "Smoking cessation counseling needed"],
+    "risk_score": 0.62,
+    "notes": "Patient is a smoker. Compliant with medications. Works in high-stress environment."
+  }
+]

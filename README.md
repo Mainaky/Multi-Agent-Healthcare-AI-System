@@ -2,30 +2,43 @@
 ### A Role-Based Multi-Agent AI System for Clinical Workflow Orchestration
 
 Built to demonstrate agentic AI capabilities aligned with XCaliber Health's internship requirements.
+Inspired by XCaliber's **Merlin** multi-agent architecture for care continuum automation.
 
 ---
 
-## 📁 Project Structure
+## 🤖 What is CareFlow?
 
+CareFlow is a multi-agent AI system where a master **Orchestrator Agent** routes clinical queries to the most appropriate specialist agent based on patient context and clinical guidelines.
+
+| Agent | Responsibility |
+|-------|---------------|
+| 🗓️ **Patient Navigator** | Scheduling, refills, follow-ups, intake |
+| 🔗 **Care Coordinator** | Referrals, care gap closure, task routing |
+| 📊 **Quality & Risk Analyst** | Risk scoring, compliance gaps, safety flags |
+| 💊 **AI Nurse** | Medication adherence, clinical prep, education |
+
+---
+
+## 🏗️ Project Structure
 ```
 careflow/
 ├── backend/
-│   ├── main.py              # FastAPI server (entry point)
+│   ├── main.py               # FastAPI server (entry point)
 │   ├── agents/
-│   │   ├── orchestrator.py  # Master routing agent
+│   │   ├── orchestrator.py   # Master routing agent
 │   │   ├── patient_navigator.py
 │   │   ├── care_coordinator.py
 │   │   ├── quality_analyst.py
 │   │   └── ai_nurse.py
 │   ├── tools/
-│   │   ├── fhir_parser.py   # Parse synthetic FHIR data
-│   │   └── rag_engine.py    # RAG over clinical guidelines
+│   │   ├── fhir_parser.py    # Parse synthetic FHIR data
+│   │   └── rag_engine.py     # RAG over clinical guidelines
 │   ├── data/
-│   │   └── patients.json    # Synthetic patient data (FHIR-like)
+│   │   └── patients.json     # Synthetic patient data (FHIR-like)
+│   ├── .env.example
 │   └── requirements.txt
 ├── frontend/
-│   ├── index.html           # Single-file React app (CDN)
-│   └── styles.css
+│   └── index.html            # Single-file dashboard
 ├── docs/
 │   └── architecture.md
 └── README.md
@@ -33,164 +46,95 @@ careflow/
 
 ---
 
-## ⚙️ Prerequisites
-
-Make sure these are installed on your machine:
-
-| Tool | Version | Download |
-|------|---------|----------|
-| Python | 3.10+ | https://python.org |
-| pip | latest | comes with Python |
-| Node.js (optional) | 18+ | https://nodejs.org |
-
----
-
-## 🚀 Setup Instructions (Step by Step)
-
-### Step 1 — Get an OpenAI or Groq API Key
-
-**Option A: OpenAI (recommended)**
-1. Go to https://platform.openai.com/api-keys
-2. Click "Create new secret key"
-3. Copy the key (starts with `sk-...`)
-
-**Option B: Groq (free & fast)**
-1. Go to https://console.groq.com
-2. Sign up and go to API Keys
-3. Create a new key
-
----
-
-### Step 2 — Setup the Backend
-
-Open your terminal and run these commands:
-
-```bash
-# Navigate to backend folder
-cd careflow/backend
-
-# Create a virtual environment
-python -m venv venv
-
-# Activate it
-# On Windows:
-venv\Scripts\activate
-# On Mac/Linux:
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
----
-
-### Step 3 — Set Your API Key
-
-Create a `.env` file inside the `backend/` folder:
-
-```
-# careflow/backend/.env
-
-# Paste your key here (choose one):
-OPENAI_API_KEY=sk-your-key-here
-
-# OR if using Groq:
-GROQ_API_KEY=gsk_your-key-here
-```
-
-> ⚠️ Never share this file or push it to GitHub!
-
----
-
-### Step 4 — Run the Backend Server
-
-```bash
-# Make sure you're in careflow/backend/ with venv active
-uvicorn main:app --reload --port 8000
-```
-
-You should see:
-```
-INFO:     Uvicorn running on http://127.0.0.1:8000
-```
-
-Test it by opening: http://localhost:8000/docs
-
----
-
-### Step 5 — Open the Frontend
-
-1. Open a **new terminal** (keep backend running)
-2. Navigate to `careflow/frontend/`
-3. Open `index.html` directly in your browser
-
-**OR** serve it with Python:
-```bash
-cd careflow/frontend
-python -m http.server 3000
-# Then open http://localhost:3000
-```
-
----
-
-## 🧪 How to Use CareFlow
-
-1. The dashboard shows 5 AI agents (like XCaliber's Merlin)
-2. Select a patient from the left panel
-3. Type a clinical query (e.g., "Patient missed 2 follow-ups, needs rescheduling")
-4. The **Orchestrator Agent** decides which specialist agent to route to
-5. The chosen agent responds with a structured care action
-6. See reasoning, confidence score, and recommended next steps
-
----
-
-## 🤖 Agent Roles
-
-| Agent | Responsibility |
-|-------|---------------|
-| **Orchestrator** | Routes queries to the right specialist agent |
-| **Patient Navigator** | Scheduling, refills, follow-ups, intake |
-| **Care Coordinator** | Cross-team task routing, gap closure |
-| **Quality & Risk Analyst** | Flags compliance gaps, risk scoring |
-| **AI Nurse** | Medication adherence, clinical prep |
-
----
-
-## 📊 Evaluation Metrics
-
-The system logs:
-- **Routing Accuracy** — Did the orchestrator pick the right agent?
-- **Response Latency** — Time to first token
-- **Hallucination Risk Score** — Based on source grounding
-- **Task Completion Rate** — Was the clinical action resolved?
-
----
-
-## 🛠️ Tech Stack
+## ⚙️ Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
 | Backend | FastAPI + Python |
 | AI Agents | LangChain + OpenAI/Groq |
 | Data | Synthetic FHIR JSON |
-| RAG | FAISS + sentence-transformers |
+| RAG | Keyword-based clinical guideline retrieval |
 | Frontend | Vanilla JS + CSS (no build needed) |
 
 ---
 
-## 🐛 Troubleshooting
+## 🚀 How to Run
 
-**"ModuleNotFoundError"** → Make sure venv is activated and you ran `pip install -r requirements.txt`
+### Step 1 — Clone the repo
+```bash
+git clone https://github.com/Mainaky/Multi-Agent-Healthcare-AI-System.git
+cd Multi-Agent-Healthcare-AI-System/careflow/backend
+```
 
-**"Invalid API Key"** → Double-check your `.env` file has no spaces around `=`
+### Step 2 — Create virtual environment
+```bash
+# Use Python 3.11 recommended
+py -3.11 -m venv venv
 
-**CORS error in browser** → Make sure backend is running on port 8000
+# Activate (Windows)
+.\venv\Scripts\activate
+```
 
-**Port already in use** → Run `uvicorn main:app --reload --port 8001`
+### Step 3 — Install dependencies
+```bash
+pip install fastapi uvicorn python-dotenv langchain==0.2.6 langchain-openai==0.1.13 langchain-groq==0.1.6 langchain-community==0.2.6 pydantic==2.9.2 httpx
+```
+
+### Step 4 — Get a free Groq API Key
+1. Go to **https://console.groq.com**
+2. Sign up → API Keys → Create Key
+3. Copy the key (starts with `gsk_...`)
+
+### Step 5 — Create .env file
+```bash
+# Windows PowerShell
+[System.IO.File]::WriteAllText(".env", "GROQ_API_KEY=gsk_your-key-here")
+```
+
+### Step 6 — Start backend
+```bash
+python -W ignore -m uvicorn main:app --port 8000
+```
+
+### Step 7 — Open frontend
+Open `careflow/frontend/index.html` in your browser.
 
 ---
 
-## 📝 Project Credits
+## 📊 Evaluation Metrics
 
-Built as an internship project demonstration for XCaliber Health Pvt. Limited.
-Inspired by the Merlin multi-agent architecture for care continuum automation.
+The system tracks per query:
+- **Routing Accuracy** — Did orchestrator pick the right agent?
+- **Response Latency** — Time to first response in ms
+- **Task Completion Rate** — Was the clinical action resolved?
+- **Confidence Score** — Agent's confidence in its response
+
+View live metrics at: `http://localhost:8000/eval/summary`
+
+---
+
+## 🧪 Sample Queries to Try
+
+| Patient | Query |
+|---------|-------|
+| Arjun Sharma | "HbA1c is 8.2, what should we do?" |
+| Ramesh Gupta | "BNP is 820, assess CHF risk" |
+| Priya Nair | "Patient reports increased stress" |
+| Sneha Iyer | "Hemoglobin is 9.8, review iron therapy" |
+| Vikram Mehta | "Patient is a smoker post-MI" |
+
+---
+
+## 🔗 API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /patients` | All patient records |
+| `GET /patients/{id}` | Single patient detail |
+| `POST /query` | Submit clinical query |
+| `GET /eval/summary` | Evaluation metrics |
+| `GET /docs` | Interactive API docs |
+
+---
+
+*Built by Mainak Roy — Data Science Undergraduate, NIIT University*

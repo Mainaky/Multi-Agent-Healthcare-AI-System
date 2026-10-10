@@ -1,6 +1,7 @@
 import time, os, sys, json
 sys.path.insert(0, os.path.dirname(__file__))
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -30,6 +31,15 @@ EVAL_LOGS = []
 class QueryRequest(BaseModel):
     patient_id: str
     query: str
+
+# Path to frontend dashboard
+FRONTEND_INDEX = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend", "index.html"))
+
+@app.get("/")
+def serve_dashboard():
+    if os.path.exists(FRONTEND_INDEX):
+        return FileResponse(FRONTEND_INDEX)
+    return {"message": "CareFlow Clinical Orchestrator API is active", "docs": "/docs"}
 
 @app.get("/patients")
 def get_patients(): 

@@ -565,6 +565,51 @@
 </head>
 <body>
 
+<!-- ── Login Portal Overlay ── -->
+<div id="login-overlay" style="position:fixed;inset:0;background:rgba(11,15,26,0.96);backdrop-filter:blur(16px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#111827;border:1px solid #1e2d45;border-radius:16px;padding:36px;width:100%;max-width:420px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:20px">
+    <div style="text-align:center">
+      <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#00d4ff,#7c3aed);display:inline-flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:12px;box-shadow:0 10px 20px rgba(0,212,255,0.2)">🔐</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:26px;color:#e2e8f0;margin-bottom:4px">CareFlow Portal</h2>
+      <p style="font-size:12px;color:#64748b;font-family:'IBM Plex Mono',monospace">Clinical Multi-Agent Orchestration Gateway</p>
+    </div>
+
+    <div id="login-error" style="display:none;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444;padding:10px 14px;border-radius:8px;font-size:12px;text-align:center">
+      Invalid credentials. Please verify your ID and password.
+    </div>
+
+    <form onsubmit="handleLoginSubmit(event)" style="display:flex;flex-direction:column;gap:14px">
+      <div>
+        <label style="display:block;font-size:11px;font-family:'IBM Plex Mono',monospace;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Clinician ID / Username</label>
+        <input type="text" id="login-username" required placeholder="Enter ID (e.g. admin)"
+          style="width:100%;background:#0b0f1a;border:1px solid #1e2d45;border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;outline:none;transition:border-color 0.2s"
+          onfocus="this.style.borderColor='#00d4ff'" onblur="this.style.borderColor='#1e2d45'">
+      </div>
+
+      <div>
+        <label style="display:block;font-size:11px;font-family:'IBM Plex Mono',monospace;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Password</label>
+        <input type="password" id="login-password" required placeholder="••••••••••••"
+          style="width:100%;background:#0b0f1a;border:1px solid #1e2d45;border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;outline:none;transition:border-color 0.2s"
+          onfocus="this.style.borderColor='#00d4ff'" onblur="this.style.borderColor='#1e2d45'">
+      </div>
+
+      <button type="submit" id="login-btn"
+        style="width:100%;background:linear-gradient(135deg,#00d4ff,#7c3aed);color:#fff;border:none;border-radius:8px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;margin-top:6px;transition:opacity 0.2s">
+        Sign In to CareFlow →
+      </button>
+    </form>
+
+    <div style="background:rgba(255,255,255,0.02);border:1px dashed #1e2d45;border-radius:8px;padding:10px 12px;font-size:11px;color:#64748b;display:flex;flex-direction:column;gap:4px">
+      <span style="font-family:'IBM Plex Mono',monospace;color:#94a3b8;font-weight:600">🔑 Default Demo Credentials:</span>
+      <div style="display:flex;justify-content:space-between">
+        <span>Username: <strong style="color:#00d4ff">admin</strong></span>
+        <span>Password: <strong style="color:#00d4ff">careflow2026</strong></span>
+      </div>
+      <button type="button" onclick="fillDemoCreds()" style="background:transparent;border:none;color:#a78bfa;cursor:pointer;font-size:11px;text-align:left;padding:0;text-decoration:underline;margin-top:2px">Auto-fill Demo Credentials</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── Header ── -->
 <header>
   <div class="logo">
@@ -574,9 +619,16 @@
       <div class="logo-sub">Multi-Agent Clinical Orchestration</div>
     </div>
   </div>
-  <div class="header-status">
-    <div class="status-dot"></div>
-    <span id="api-status">Connecting to backend...</span>
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="header-status">
+      <div class="status-dot"></div>
+      <span id="api-status">Connecting to backend...</span>
+    </div>
+    <div style="height:16px;width:1px;background:var(--border)"></div>
+    <div id="auth-user-badge" style="display:flex;align-items:center;gap:10px;font-size:12px;font-family:'IBM Plex Mono',monospace">
+      <span style="color:#93c5fd">👤 <span id="auth-username-display">admin</span></span>
+      <button onclick="handleLogout()" style="background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.25);padding:4px 9px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:500">Sign Out</button>
+    </div>
   </div>
 </header>
 
@@ -990,7 +1042,68 @@ function escHtml(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-boot();
+function checkAuth() {
+  const isAuth = sessionStorage.getItem('careflow_authenticated');
+  const overlay = document.getElementById('login-overlay');
+  if (isAuth === 'true') {
+    overlay.style.display = 'none';
+    const user = sessionStorage.getItem('careflow_user') || 'admin';
+    document.getElementById('auth-username-display').textContent = user;
+    boot();
+  } else {
+    overlay.style.display = 'flex';
+  }
+}
+
+async function handleLoginSubmit(e) {
+  e.preventDefault();
+  const u = document.getElementById('login-username').value.trim();
+  const p = document.getElementById('login-password').value.trim();
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  errEl.style.display = 'none';
+  btn.textContent = 'Verifying Credentials...';
+
+  try {
+    const res = await fetch(`${API}/auth/login`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username: u, password: p})
+    });
+    if (res.ok) {
+      sessionStorage.setItem('careflow_authenticated', 'true');
+      sessionStorage.setItem('careflow_user', u);
+      checkAuth();
+      return;
+    }
+  } catch {}
+
+  // Fallback credentials validation
+  if (u === 'admin' && p === 'careflow2026') {
+    sessionStorage.setItem('careflow_authenticated', 'true');
+    sessionStorage.setItem('careflow_user', u);
+    checkAuth();
+    return;
+  }
+
+  btn.textContent = 'Sign In to CareFlow →';
+  errEl.style.display = 'block';
+}
+
+function handleLogout() {
+  sessionStorage.removeItem('careflow_authenticated');
+  sessionStorage.removeItem('careflow_user');
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  checkAuth();
+}
+
+function fillDemoCreds() {
+  document.getElementById('login-username').value = 'admin';
+  document.getElementById('login-password').value = 'careflow2026';
+}
+
+checkAuth();
 </script>
 </body>
 </html>

@@ -28,6 +28,24 @@ AGENT_REGISTRY = {
 # In-memory evaluation tracking
 EVAL_LOGS = []
 
+# Authentication credentials (configurable via environment variables)
+CAREFLOW_USER = os.getenv("CAREFLOW_USER", "admin")
+CAREFLOW_PASSWORD = os.getenv("CAREFLOW_PASSWORD", "careflow2026")
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+@app.post("/auth/login")
+def login(req: LoginRequest):
+    if req.username == CAREFLOW_USER and req.password == CAREFLOW_PASSWORD:
+        return {
+            "status": "success",
+            "username": req.username,
+            "message": "Authenticated successfully"
+        }
+    raise HTTPException(status_code=401, detail="Invalid username or password")
+
 class QueryRequest(BaseModel):
     patient_id: str
     query: str

@@ -1,6 +1,6 @@
 """
-rag_engine.py - Zero dependency keyword-based retrieval (no numpy, no faiss, no transformers)
-Works on any Python version on Windows without crashes.
+rag_engine.py - Zero dependency keyword-based retrieval.
+Modified for 100% stability on Windows.
 """
 
 import re
@@ -25,18 +25,32 @@ CLINICAL_GUIDELINES = [
 
 def _score(query: str, guideline: str) -> int:
     """Simple keyword overlap scoring — no ML needed."""
-    q_words = set(re.findall(r'\w+', query.lower()))
-    g_words = set(re.findall(r'\w+', guideline.lower()))
-    # Remove stopwords
-    stops = {'the','a','an','is','in','of','to','and','or','for','with','at','by','from','be','are','as','on','was','this'}
-    q_words -= stops
-    g_words -= stops
-    return len(q_words & g_words)
+    try:
+        q_words = set(re.findall(r'\w+', query.lower()))
+        g_words = set(re.findall(r'\w+', guideline.lower()))
+        stops = {'the','a','an','is','in','of','to','and','or','for','with','at','by','from','be','are','as','on','was','this'}
+        q_words -= stops
+        g_words -= stops
+        return len(q_words & g_words)
+    except:
+        return 0
 
 def retrieve_guidelines(query: str, top_k: int = 3) -> list:
+    """Retrieve top-k relevant guidelines. Safe from empty lists."""
+    if not query:
+        return CLINICAL_GUIDELINES[:1]
+        
     scored = [(g, _score(query, g)) for g in CLINICAL_GUIDELINES]
     scored.sort(key=lambda x: x[1], reverse=True)
-    return [g for g, _ in scored[:top_k]]
+    
+    results = [g for g, s in scored[:top_k] if s > 0]
+    
+    # Safety: Agar koi match na mile, toh kam se kam ek guideline zaroor bhejein
+    if not results:
+        return [CLINICAL_GUIDELINES[-1]] # Default to Mental Health/General
+    return results
 
 def format_guidelines_for_prompt(guidelines: list) -> str:
+    if not guidelines:
+        return "No specific guidelines retrieved."
     return '\n'.join([f'- {g}' for g in guidelines])

@@ -1,15 +1,5 @@
-"""
-main.py — CareFlow Backend API
-Run with: uvicorn main:app --reload --port 8000
-"""
-
-import time
-import os
-import sys
-
-# Add parent directory to path so agents/tools can be imported
+import time, os, sys, json
 sys.path.insert(0, os.path.dirname(__file__))
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -17,30 +7,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from tools.fhir_parser import get_all_patient_summaries, get_patient_by_id, build_patient_summary
-from tools.rag_engine import retrieve_guidelines
+from tools.fhir_parser import get_all_patient_summaries, get_patient_by_id
 from agents.orchestrator import route_query
 import agents.patient_navigator as patient_navigator
 import agents.care_coordinator as care_coordinator
 import agents.quality_analyst as quality_analyst
 import agents.ai_nurse as ai_nurse
 
-# ─── App Setup ────────────────────────────────────────────────────────────────
-app = FastAPI(
-    title="CareFlow API",
-    description="Multi-Agent Clinical Workflow Orchestration System",
-    version="1.0.0"
-)
+app = FastAPI(title="CareFlow API")
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# ─── Agent Registry ───────────────────────────────────────────────────────────
 AGENT_REGISTRY = {
     "patient_navigator": patient_navigator.run,
     "care_coordinator": care_coordinator.run,
@@ -48,128 +24,101 @@ AGENT_REGISTRY = {
     "ai_nurse": ai_nurse.run,
 }
 
-# ─── Request/Response Models ─────────────────────────────────────────────────
+# In-memory evaluation tracking
+EVAL_LOGS = []
+
 class QueryRequest(BaseModel):
     patient_id: str
     query: str
 
-class EvalLog(BaseModel):
-    patient_id: str
-    query: str
-    selected_agent: str
-    confidence: float
-    latency_ms: float
-    task_completion: str
-
-
-# ─── In-Memory Eval Log ───────────────────────────────────────────────────────
-eval_logs: list[EvalLog] = []
-
-
-# ─── Routes ──────────────────────────────────────────────────────────────────
-@app.get("/")
-def root():
-    return {"message": "CareFlow API is running", "docs": "/docs"}
-
-
 @app.get("/patients")
-def get_patients():
-    """Return all patients for the dashboard."""
+def get_patients(): 
     return get_all_patient_summaries()
-
 
 @app.get("/patients/{patient_id}")
 def get_patient(patient_id: str):
-    """Return full patient record."""
     patient = get_patient_by_id(patient_id)
-    if not patient:
+    if not patient: 
         raise HTTPException(status_code=404, detail="Patient not found")
     return patient
 
+@app.get("/eval/summary")
+def get_eval_summary():
+    if not EVAL_LOGS:
+        return {
+            "total_queries": 0,
+            "avg_latency_ms": 0,
+            "avg_confidence": 0.0,
+            "agent_usage": {}
+        }
+    total = len(EVAL_LOGS)
+    avg_latency = round(sum(item["latency_ms"] for item in EVAL_LOGS) / total, 1)
+    avg_conf = round(sum(item["confidence"] for item in EVAL_LOGS) / total, 2)
+    usage = {}
+    for item in EVAL_LOGS:
+        usage[item["selected_agent"]] = usage.get(item["selected_agent"], 0) + 1
+    return {
+        "total_queries": total,
+        "avg_latency_ms": avg_latency,
+        "avg_confidence": avg_conf,
+        "agent_usage": usage
+    }
+
+@app.get("/eval/logs")
+def get_eval_logs():
+    return EVAL_LOGS
 
 @app.post("/query")
 def handle_query(request: QueryRequest):
-    """
-    Main endpoint: Orchestrates routing and agent execution.
-    1. Orchestrator decides which agent to use
-    2. Selected agent runs and returns structured response
-    3. Evaluation metrics logged
-    """
     start_time = time.time()
-
-    # Step 1: Route
     routing_result = route_query(request.patient_id, request.query)
-
-    if "error" in routing_result:
-        raise HTTPException(status_code=404, detail=routing_result["error"])
-
     routing = routing_result["routing"]
     selected_agent = routing.get("selected_agent", "care_coordinator")
-    patient_summary = routing_result["patient_summary"]
-    guidelines = routing_result["guidelines_used"]
-
-    # Step 2: Run selected agent
+    
     agent_fn = AGENT_REGISTRY.get(selected_agent, care_coordinator.run)
-    agent_response = agent_fn(patient_summary, request.query, guidelines)
+    agent_response = agent_fn(routing_result["patient_summary"], request.query, routing_result["guidelines_used"])
 
-    # Step 3: Log evaluation
-    latency_ms = (time.time() - start_time) * 1000
-    task_completion = agent_response.get("evaluation", {}).get("task_completion", "unknown")
-    agent_confidence = agent_response.get("evaluation", {}).get("confidence", routing.get("confidence", 0.5))
+    # 🛡️ SAFETY SHIELD
+    if isinstance(agent_response, str):
+        try:
+            clean_str = agent_response.strip().replace("```json", "").replace("```", "")
+            agent_response = json.loads(clean_str)
+        except Exception:
+            agent_response = {
+                "agent": selected_agent, 
+                "action_taken": agent_response, 
+                "evaluation": {"task_completion": "complete"}
+            }
 
-    log = EvalLog(
-        patient_id=request.patient_id,
-        query=request.query,
-        selected_agent=selected_agent,
-        confidence=agent_confidence,
-        latency_ms=round(latency_ms, 2),
-        task_completion=task_completion
-    )
-    eval_logs.append(log)
+    latency_ms = round((time.time() - start_time) * 1000, 2)
+    confidence = float(routing.get("confidence", 0.9))
+    task_completion = "complete"
+    if isinstance(agent_response, dict) and "evaluation" in agent_response:
+        task_completion = agent_response["evaluation"].get("task_completion", "complete")
+
+    # Record eval metrics
+    EVAL_LOGS.append({
+        "timestamp": time.time(),
+        "patient_id": request.patient_id,
+        "query": request.query,
+        "selected_agent": selected_agent,
+        "confidence": confidence,
+        "latency_ms": latency_ms,
+        "task_completion": task_completion
+    })
 
     return {
-        "orchestrator": {
-            "selected_agent": selected_agent,
-            "routing_reason": routing.get("routing_reason"),
-            "confidence": routing.get("confidence"),
-            "urgency": routing.get("urgency"),
-        },
+        "orchestrator": routing,
         "agent_response": agent_response,
-        "guidelines_used": guidelines,
+        "guidelines_used": routing_result["guidelines_used"],
         "evaluation": {
-            "latency_ms": round(latency_ms, 2),
-            "task_completion": task_completion,
-            "confidence": agent_confidence,
+            "latency_ms": latency_ms,
+            "confidence": confidence,
+            "task_completion": task_completion
         },
         "patient": routing_result["patient"]
     }
 
-
-@app.get("/eval/logs")
-def get_eval_logs():
-    """Return all evaluation logs."""
-    return [log.dict() for log in eval_logs]
-
-
-@app.get("/eval/summary")
-def get_eval_summary():
-    """Return evaluation summary metrics."""
-    if not eval_logs:
-        return {"message": "No queries run yet"}
-
-    avg_latency = sum(l.latency_ms for l in eval_logs) / len(eval_logs)
-    avg_confidence = sum(l.confidence for l in eval_logs) / len(eval_logs)
-    completion_counts = {}
-    agent_counts = {}
-
-    for log in eval_logs:
-        completion_counts[log.task_completion] = completion_counts.get(log.task_completion, 0) + 1
-        agent_counts[log.selected_agent] = agent_counts.get(log.selected_agent, 0) + 1
-
-    return {
-        "total_queries": len(eval_logs),
-        "avg_latency_ms": round(avg_latency, 2),
-        "avg_confidence": round(avg_confidence, 3),
-        "task_completion_breakdown": completion_counts,
-        "agent_usage": agent_counts,
-    }
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

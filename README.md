@@ -137,4 +137,19 @@ View live metrics at: `http://localhost:8000/eval/summary`
 
 ---
 
+## 🔌 Model Context Protocol (MCP) Server
+
+CareFlow includes a native **MCP Server** (`backend/mcp_server.py`) enabling external AI agents (like Claude Desktop, Cursor, or IDE copilot) to directly invoke CareFlow clinical tools and inspect FHIR patient records via standardized JSON-RPC:
+
+- **Resources**: `careflow://patients`, `careflow://guidelines`
+- **Tools**:
+  - `get_patient_profile(patient_id)`: Fetches FHIR clinical profile
+  - `search_clinical_guidelines(query)`: RAG guideline retrieval
+  - `triage_clinical_query(patient_id, query)`: Master Orchestrator triage
+  - `execute_careflow_workflow(patient_id, query)`: End-to-end multi-agent execution
+
+To connect with Claude Desktop or Cursor, refer to `backend/mcp_config.json`.
+
+---
+
 *Built by Mainak Roy — Data Science Undergraduate, NIIT University*

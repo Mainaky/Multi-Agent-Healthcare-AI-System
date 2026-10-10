@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "careflow": {
+      "command": "C:\\Users\\maina\\OneDrive\\Documents\\careflow_nodeps\\careflow\\backend\\venv\\Scripts\\python.exe",
+      "args": [
+        "C:\\Users\\maina\\OneDrive\\Documents\\careflow_nodeps\\careflow\\backend\\mcp_server.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}

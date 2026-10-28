@@ -3,265 +3,231 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CareFlow Enterprise — Clinical Multi-Agent AI Platform</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<title>CareFlow — Clinical Multi-Agent Healthcare Platform</title>
 <style>
   :root {
-    --bg-base: #070a12;
-    --bg-surface: #0d121f;
-    --bg-card: #131b2e;
-    --bg-card-hover: #1a243d;
-    --border: #1e293b;
-    --border-highlight: #334155;
-    --accent: #00e5ff;
-    --accent-glow: rgba(0, 229, 255, 0.15);
-    --accent-purple: #8b5cf6;
-    --accent-emerald: #10b981;
-    --warn: #f59e0b;
-    --danger: #f43f5e;
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono: 'IBM Plex Mono', monospace;
+    --bg-page: #0b0f19;
+    --bg-surface: #111827;
+    --bg-card: #1e293b;
+    --bg-card-hover: #273549;
+    --border-color: #334155;
+    --border-light: #475569;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-light: rgba(37, 99, 235, 0.12);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --success: #10b981;
+    --success-bg: rgba(16, 185, 129, 0.12);
+    --warning: #f59e0b;
+    --warning-bg: rgba(245, 158, 11, 0.12);
+    --danger: #ef4444;
+    --danger-bg: rgba(239, 68, 68, 0.12);
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
   body {
-    background: var(--bg-base);
-    color: var(--text-primary);
-    font-family: var(--font-sans);
+    background: var(--bg-page);
+    color: var(--text-main);
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 1.5;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
   }
 
-  /* ── Enterprise Header ── */
+  /* ── Header ── */
   header {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 28px;
-    border-bottom: 1px solid var(--border);
-    background: rgba(13, 18, 31, 0.95);
-    backdrop-filter: blur(16px);
     position: sticky;
     top: 0;
     z-index: 100;
   }
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .logo-icon-wrap {
-    width: 40px; height: 40px;
-    background: linear-gradient(135deg, #00e5ff, #8b5cf6);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
-    position: relative;
-  }
-  .logo-icon-wrap::after {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #00e5ff, transparent);
-    z-index: -1;
-    opacity: 0.5;
-  }
-  .brand-title {
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: linear-gradient(90deg, #ffffff, #93c5fd);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .brand-badge {
-    font-size: 10px;
-    font-family: var(--font-mono);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    background: rgba(0, 229, 255, 0.12);
-    color: var(--accent);
-    padding: 2px 7px;
-    border-radius: 6px;
-    border: 1px solid rgba(0, 229, 255, 0.3);
-    -webkit-text-fill-color: var(--accent);
-  }
-  .brand-sub {
-    font-size: 11px;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-    margin-top: 1px;
-  }
-
-  .header-telemetry {
+  .header-brand {
     display: flex;
     align-items: center;
     gap: 12px;
   }
-  .status-pill {
+  .brand-logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--primary);
+    border-radius: 8px;
     display: flex;
     align-items: center;
-    gap: 7px;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    color: #ffffff;
+  }
+  .brand-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .brand-tag {
     font-size: 11px;
-    font-family: var(--font-mono);
-    padding: 5px 12px;
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    border-radius: 99px;
-    color: var(--accent-emerald);
+    font-weight: 600;
+    text-transform: uppercase;
+    background: var(--primary-light);
+    color: #60a5fa;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
   }
-  .status-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--accent-emerald);
-    box-shadow: 0 0 8px var(--accent-emerald);
-    animation: livePulse 2s infinite ease-in-out;
-  }
-  @keyframes livePulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.4); opacity: 0.6; }
+  .brand-sub {
+    font-size: 12px;
+    color: var(--text-muted);
   }
 
-  .meta-pill {
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .status-badge {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 11px;
-    font-family: var(--font-mono);
-    color: var(--text-secondary);
-    background: rgba(255, 255, 255, 0.04);
-    padding: 5px 10px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-  }
-
-  .user-profile-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    padding: 5px 12px;
-    border-radius: 10px;
     font-size: 12px;
-  }
-  .user-avatar {
-    width: 26px; height: 26px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px;
-  }
-  .user-name {
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-  .user-role {
-    font-size: 10px;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-  }
-  .sign-out-btn {
-    background: rgba(244, 63, 94, 0.12);
-    border: 1px solid rgba(244, 63, 94, 0.25);
-    color: var(--danger);
+    font-weight: 500;
     padding: 4px 10px;
     border-radius: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+    background: var(--success-bg);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #34d399;
   }
-  .sign-out-btn:hover {
-    background: rgba(244, 63, 94, 0.2);
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #34d399;
+  }
+  .user-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+  }
+  .btn-signout {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-signout:hover {
+    color: var(--danger);
     border-color: var(--danger);
   }
 
   /* ── Mobile Navigation Bar ── */
-  .mobile-nav {
+  .mobile-tabs {
     display: none;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
+    padding: 4px 8px;
+  }
+  .mobile-tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 4px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .mobile-tab-btn.active {
+    color: #60a5fa;
+    border-bottom-color: var(--primary);
   }
 
-  /* ── Layout Framework ── */
+  /* ── Main Layout (3-Column Desktop) ── */
   .main-layout {
     display: grid;
-    grid-template-columns: 310px 1fr 340px;
+    grid-template-columns: 300px 1fr 320px;
     flex: 1;
-    height: calc(100vh - 65px);
+    height: calc(100vh - 61px);
     overflow: hidden;
   }
 
-  /* ── Left Sidebar: Patients ── */
+  /* ── Left Sidebar (Patients) ── */
   .sidebar {
     background: var(--bg-surface);
-    border-right: 1px solid var(--border);
+    border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
   .sidebar-header {
-    padding: 16px 18px 12px;
-    border-bottom: 1px solid var(--border);
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
   }
-  .sidebar-headline {
+  .sidebar-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
   }
   .sidebar-title {
-    font-size: 11px;
-    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 0.5px;
     color: var(--text-muted);
+  }
+  .btn-intake {
+    background: var(--primary);
+    color: #ffffff;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
     font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
   }
-  .patient-count-badge {
-    font-size: 10px;
-    font-family: var(--font-mono);
-    background: rgba(0, 229, 255, 0.1);
-    color: var(--accent);
-    padding: 2px 7px;
-    border-radius: 99px;
-    border: 1px solid rgba(0, 229, 255, 0.25);
-  }
-  .search-wrap {
-    position: relative;
+  .btn-intake:hover {
+    background: var(--primary-hover);
   }
   .search-input {
     width: 100%;
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px 8px 32px;
-    color: var(--text-primary);
-    font-size: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: var(--text-main);
+    font-size: 13px;
     outline: none;
-    transition: border-color 0.2s;
   }
-  .search-input:focus { border-color: var(--accent); }
-  .search-icon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-    font-size: 12px;
+  .search-input:focus {
+    border-color: var(--primary);
   }
-  .patient-filter-row {
+  .filter-pills {
     display: flex;
     gap: 6px;
     margin-top: 8px;
@@ -269,24 +235,23 @@
     padding-bottom: 2px;
   }
   .filter-pill {
-    font-size: 10px;
-    font-family: var(--font-mono);
-    padding: 3px 8px;
-    border-radius: 6px;
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 4px;
     cursor: pointer;
     white-space: nowrap;
-    transition: all 0.15s;
   }
-  .filter-pill:hover, .filter-pill.active {
-    background: rgba(0, 229, 255, 0.15);
-    color: var(--accent);
-    border-color: rgba(0, 229, 255, 0.35);
+  .filter-pill.active {
+    background: var(--primary-light);
+    color: #60a5fa;
+    border-color: var(--primary);
   }
 
-  .patient-scroll {
+  .patient-list {
     flex: 1;
     overflow-y: auto;
     padding: 10px 12px;
@@ -296,171 +261,161 @@
   }
   .patient-card {
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    position: relative;
+    transition: all 0.15s;
   }
   .patient-card:hover {
+    border-color: var(--border-light);
     background: var(--bg-card-hover);
-    border-color: var(--border-highlight);
-    transform: translateY(-1px);
   }
   .patient-card.active {
-    background: rgba(0, 229, 255, 0.08);
-    border-color: var(--accent);
-    box-shadow: 0 0 16px rgba(0, 229, 255, 0.12);
+    border-color: var(--primary);
+    background: var(--primary-light);
   }
-  .pc-top {
+  .pc-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: baseline;
     margin-bottom: 4px;
   }
-  .patient-name {
-    font-size: 14px;
+  .pc-name {
     font-weight: 600;
-    color: var(--text-primary);
+    font-size: 14px;
+    color: var(--text-main);
   }
-  .pc-mrn {
-    font-size: 10px;
+  .pc-id {
     font-family: var(--font-mono);
-    color: var(--text-muted);
-  }
-  .patient-meta {
     font-size: 11px;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
+    color: var(--text-dim);
+  }
+  .pc-details {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
   }
   .pc-condition {
-    display: inline-block;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     color: #93c5fd;
-    background: rgba(59, 130, 246, 0.15);
-    border: 1px solid rgba(59, 130, 246, 0.25);
-    padding: 2px 8px;
-    border-radius: 6px;
     margin-bottom: 8px;
   }
-  .pc-biomarkers {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 8px;
-  }
-  .biomarker-chip {
-    font-size: 10px;
-    font-family: var(--font-mono);
-    padding: 2px 6px;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-  }
-  .biomarker-chip.alert {
-    color: var(--danger);
-    background: rgba(244, 63, 94, 0.1);
-    border-color: rgba(244, 63, 94, 0.3);
-  }
-  .risk-track {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .risk-bar-bg {
-    flex: 1;
-    height: 5px;
-    background: #1e293b;
+  .risk-bar {
+    height: 4px;
+    background: #334155;
     border-radius: 99px;
     overflow: hidden;
   }
-  .risk-bar-fill {
+  .risk-fill {
     height: 100%;
     border-radius: 99px;
-    transition: width 0.6s ease;
-  }
-  .risk-pct {
-    font-size: 10px;
-    font-family: var(--font-mono);
-    font-weight: 600;
-    min-width: 32px;
-    text-align: right;
   }
 
-  /* ── Center Workspace ── */
+  /* ── Center Panel (Workspace) ── */
   .main-panel {
     display: flex;
     flex-direction: column;
+    background: var(--bg-page);
     overflow: hidden;
-    background: var(--bg-base);
   }
 
   /* Patient Header Dossier */
   .patient-header-area {
     background: var(--bg-surface);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 20px;
   }
   .ph-top-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
     margin-bottom: 12px;
   }
-  .ph-patient-title {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--text-primary);
+  .ph-title-block {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    gap: 2px;
   }
+  .ph-patient-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+  .ph-patient-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* Badges - Completely Clean, No Overlapping, No Splitting */
   .ph-badge-group {
     display: flex;
-    gap: 8px;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  #hdr-badges {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .badge {
-    font-size: 11px;
-    font-family: var(--font-mono);
-    font-weight: 500;
-    padding: 3px 10px;
-    border-radius: 99px;
-    border: 1px solid;
-  }
-  .badge-condition { color: #93c5fd; border-color: rgba(59, 130, 246, 0.4); background: rgba(59, 130, 246, 0.12); }
-  .badge-risk-low { color: var(--accent-emerald); border-color: var(--accent-emerald); background: rgba(16, 185, 129, 0.1); }
-  .badge-risk-med { color: var(--warn); border-color: var(--warn); background: rgba(245, 158, 11, 0.1); }
-  .badge-risk-high { color: #fb923c; border-color: #fb923c; background: rgba(251, 146, 60, 0.1); }
-  .badge-risk-crit { color: var(--danger); border-color: var(--danger); background: rgba(244, 63, 94, 0.12); }
-
-  .ph-actions {
-    display: flex;
-    gap: 8px;
-  }
-  .action-btn-secondary {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 500;
-    cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    transition: all 0.2s;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid;
+    line-height: 1.2;
   }
-  .action-btn-secondary:hover {
-    color: var(--text-primary);
-    border-color: var(--border-highlight);
-    background: var(--bg-card-hover);
+  .badge-condition {
+    color: #93c5fd;
+    background: rgba(59, 130, 246, 0.12);
+    border-color: rgba(59, 130, 246, 0.35);
+  }
+  .badge-risk-low {
+    color: #34d399;
+    background: var(--success-bg);
+    border-color: rgba(16, 185, 129, 0.35);
+  }
+  .badge-risk-med {
+    color: #fbbf24;
+    background: var(--warning-bg);
+    border-color: rgba(245, 158, 11, 0.35);
+  }
+  .badge-risk-high {
+    color: #fb923c;
+    background: rgba(251, 146, 60, 0.12);
+    border-color: rgba(251, 146, 60, 0.35);
+  }
+  .badge-risk-crit {
+    color: #f87171;
+    background: var(--danger-bg);
+    border-color: rgba(239, 68, 68, 0.35);
   }
 
+  .btn-soap {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn-soap:hover {
+    border-color: var(--border-light);
+  }
+
+  /* Vitals Cards */
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -468,910 +423,530 @@
   }
   .stat-card {
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 14px;
-    display: flex;
-    flex-direction: column;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 10px 12px;
   }
   .stat-label {
-    font-size: 10px;
-    font-family: var(--font-mono);
-    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-dim);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 2px;
+    letter-spacing: 0.5px;
   }
   .stat-number {
     font-size: 18px;
     font-weight: 700;
+    margin-top: 2px;
     font-family: var(--font-mono);
   }
 
-  /* Query Area & Chat */
+  /* Query Stream */
   .query-area {
     flex: 1;
     overflow-y: auto;
-    padding: 20px 24px;
+    padding: 18px 20px;
     display: flex;
     flex-direction: column;
     gap: 16px;
   }
   .welcome-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
     text-align: center;
-    color: var(--text-secondary);
-    padding: 40px;
-    max-width: 540px;
-    margin: 0 auto;
-  }
-  .welcome-icon-box {
-    width: 64px; height: 64px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(139, 92, 246, 0.15));
-    border: 1px solid rgba(0, 229, 255, 0.3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px;
-    margin-bottom: 16px;
-    box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: auto;
+    padding: 24px 0;
   }
   .welcome-title {
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--text-main);
     margin-bottom: 6px;
   }
-  .welcome-sub {
+  .welcome-desc {
     font-size: 13px;
-    color: var(--text-muted);
     line-height: 1.6;
-    margin-bottom: 20px;
   }
 
-  /* Message Stream */
-  .msg-container {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    animation: fadeUp 0.3s ease;
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .user-msg-box {
+  /* Messages */
+  .user-msg {
     align-self: flex-end;
     max-width: 80%;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
-    border: 1px solid rgba(139, 92, 246, 0.4);
-    border-radius: 14px 14px 2px 14px;
-    padding: 14px 18px;
-    color: var(--text-primary);
-    font-size: 13px;
-    line-height: 1.6;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    background: var(--primary);
+    color: #ffffff;
+    padding: 10px 14px;
+    border-radius: 10px 10px 2px 10px;
+    font-size: 14px;
+    line-height: 1.5;
   }
   .user-msg-meta {
-    font-size: 10px;
-    font-family: var(--font-mono);
-    color: #c4b5fd;
+    font-size: 11px;
+    color: #bfdbfe;
     margin-bottom: 4px;
     display: flex;
     justify-content: space-between;
     gap: 12px;
   }
 
-  /* Multi-Agent Response Card */
-  .agent-msg-box {
+  .agent-card {
     align-self: flex-start;
     width: 100%;
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   }
-  .agent-card-header {
-    background: rgba(13, 18, 31, 0.85);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 18px;
+  .agent-header {
+    background: #192231;
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
   }
-  .agent-lead {
+  .agent-title {
+    font-weight: 700;
+    font-size: 13px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
   }
-  .agent-avatar-badge {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    border: 1px solid;
-  }
-  .agent-title-text {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-  .agent-title-sub {
-    font-size: 10px;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-  }
-  .routing-metrics {
+  .agent-meta {
     display: flex;
     align-items: center;
     gap: 8px;
   }
-  .urgency-tag {
-    font-size: 10px;
-    font-family: var(--font-mono);
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 6px;
-    text-transform: uppercase;
-  }
-  .confidence-tag {
-    font-size: 11px;
-    font-family: var(--font-mono);
-    color: var(--accent-emerald);
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 2px 8px;
-    border-radius: 6px;
-  }
-
-  /* 🧠 Multi-Agent Brainstorming & Reasoning Accordion */
-  .brainstorming-card {
-    background: rgba(0, 229, 255, 0.03);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 18px;
-  }
-  .brainstorm-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    user-select: none;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--accent);
-  }
-  .brainstorm-toggle:hover {
-    color: #67e8f9;
-  }
-  .brainstorm-steps {
+  .agent-body {
+    padding: 14px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px dashed var(--border);
+    gap: 12px;
   }
-  .step-node {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
+  .action-box {
+    background: #141d2b;
+    border-left: 3px solid var(--primary);
+    padding: 10px 12px;
+    border-radius: 0 4px 4px 0;
   }
-  .step-num {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    background: rgba(0, 229, 255, 0.15);
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px;
-    font-family: var(--font-mono);
+  .action-box-title {
+    font-size: 11px;
     font-weight: 700;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .step-content {
-    flex: 1;
-    font-size: 12px;
-  }
-  .step-title {
-    font-weight: 600;
-    color: var(--text-primary);
+    text-transform: uppercase;
+    color: #60a5fa;
     margin-bottom: 2px;
   }
-  .step-desc {
-    color: var(--text-secondary);
+  .action-box-text {
+    font-size: 13.5px;
+    color: var(--text-main);
     line-height: 1.5;
-    font-size: 11px;
-  }
-  .guideline-chip-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 6px;
-  }
-  .guideline-chip {
-    font-size: 10px;
-    font-family: var(--font-mono);
-    background: rgba(139, 92, 246, 0.12);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    color: #c4b5fd;
-    padding: 2px 7px;
-    border-radius: 4px;
   }
 
-  /* Response Body Sections */
-  .agent-card-body {
-    padding: 18px;
+  /* Accordion Trace */
+  .trace-box {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: #141d2b;
+    padding: 10px 12px;
+  }
+  .trace-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: #93c5fd;
+  }
+  .trace-content {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 8px;
+    font-size: 12px;
   }
-  .action-callout {
-    background: rgba(255, 255, 255, 0.03);
-    border-left: 3px solid var(--accent);
-    padding: 12px 16px;
-    border-radius: 0 8px 8px 0;
-  }
-  .action-title {
-    font-size: 11px;
-    font-family: var(--font-mono);
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  .trace-step-title {
     font-weight: 600;
-    margin-bottom: 4px;
+    color: var(--text-main);
   }
-  .action-text {
-    font-size: 13.5px;
-    line-height: 1.6;
-    color: var(--text-primary);
+  .trace-step-text {
+    color: var(--text-muted);
+    font-size: 11.5px;
+    line-height: 1.5;
   }
 
-  .deliverables-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
+  .deliverables-box {
+    background: #141d2b;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 10px 12px;
   }
-  .deliverable-section {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
-  }
-  .deliverable-head {
-    font-size: 10.5px;
-    font-family: var(--font-mono);
-    color: var(--text-muted);
+  .deliverables-title {
+    font-size: 11px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
   }
-  .interactive-task-list {
+  .task-list {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 6px;
   }
   .task-item {
-    font-size: 12px;
-    color: var(--text-secondary);
+    font-size: 12.5px;
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    line-height: 1.5;
+    color: var(--text-main);
   }
-  .task-item input[type="checkbox"] {
+  .task-item input {
     margin-top: 3px;
-    accent-color: var(--accent);
-    cursor: pointer;
   }
 
   .agent-footer {
-    background: rgba(13, 18, 31, 0.6);
-    border-top: 1px solid var(--border);
-    padding: 10px 18px;
+    background: #192231;
+    border-top: 1px solid var(--border-color);
+    padding: 8px 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 11px;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text-dim);
   }
-  .copy-btn {
+  .btn-copy {
     background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
     padding: 3px 8px;
-    border-radius: 6px;
+    border-radius: 4px;
+    font-size: 11px;
     cursor: pointer;
-    font-size: 10.5px;
-    font-family: var(--font-mono);
-    transition: all 0.15s;
   }
-  .copy-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+  .btn-copy:hover {
+    color: var(--text-main);
+    border-color: var(--border-light);
   }
 
-  /* In-flight Dynamic Brainstorming Pipeline */
-  .deliberation-pipeline {
-    background: var(--bg-card);
-    border: 1px solid rgba(0, 229, 255, 0.3);
-    border-radius: 14px;
-    padding: 18px 22px;
-    box-shadow: 0 0 30px rgba(0, 229, 255, 0.08);
-  }
-  .dp-title {
-    font-size: 12px;
-    font-family: var(--font-mono);
-    color: var(--accent);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  .dp-step-row {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .dp-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 12px;
-    color: var(--text-secondary);
-  }
-  .dp-spinner {
-    width: 14px; height: 14px;
-    border: 2px solid rgba(0, 229, 255, 0.2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Input Bar */
+  /* Input Box */
   .input-bar {
-    padding: 14px 24px 18px;
-    border-top: 1px solid var(--border);
+    padding: 12px 20px 16px;
+    border-top: 1px solid var(--border-color);
     background: var(--bg-surface);
   }
   .scenarios-row {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     overflow-x: auto;
-    padding-bottom: 10px;
+    padding-bottom: 8px;
   }
-  .scenario-btn {
-    font-size: 11px;
-    padding: 5px 12px;
+  .btn-scenario {
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 99px;
-    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 11.5px;
+    padding: 4px 10px;
+    border-radius: 4px;
     cursor: pointer;
     white-space: nowrap;
-    transition: all 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
   }
-  .scenario-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(0, 229, 255, 0.06);
+  .btn-scenario:hover {
+    color: #60a5fa;
+    border-color: var(--primary);
   }
-  .input-box-row {
+  .input-row {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     align-items: flex-end;
   }
   textarea {
     flex: 1;
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 16px;
-    color: var(--text-primary);
-    font-family: var(--font-sans);
-    font-size: 13.5px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--text-main);
+    font-family: var(--font-family);
+    font-size: 14px;
     resize: none;
-    height: 48px;
-    max-height: 140px;
+    height: 44px;
     outline: none;
-    transition: border-color 0.2s;
   }
-  textarea:focus { border-color: var(--accent); }
-  .send-btn {
-    height: 48px;
-    padding: 0 20px;
-    background: linear-gradient(135deg, #00e5ff, #8b5cf6);
-    border: none;
-    border-radius: 10px;
+  textarea:focus {
+    border-color: var(--primary);
+  }
+  .btn-send {
+    height: 44px;
+    padding: 0 16px;
+    background: var(--primary);
     color: #ffffff;
-    font-weight: 700;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
     font-size: 13px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: opacity 0.2s, transform 0.1s;
-    box-shadow: 0 4px 16px rgba(0, 229, 255, 0.25);
   }
-  .send-btn:hover { opacity: 0.9; }
-  .send-btn:active { transform: scale(0.97); }
-  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-send:hover {
+    background: var(--primary-hover);
+  }
+  .btn-send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
-  /* ── Right Panel: Intelligence & Telemetry ── */
+  /* ── Right Panel (Telemetry & Data) ── */
   .right-panel {
     background: var(--bg-surface);
-    border-left: 1px solid var(--border);
+    border-left: 1px solid var(--border-color);
     overflow-y: auto;
-    padding: 18px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
   }
-  .panel-section-title {
-    font-size: 11px;
-    font-family: var(--font-mono);
-    color: var(--text-muted);
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    font-weight: 600;
-    margin-bottom: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .agent-fleet-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .agent-fleet-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
+  .agent-fleet-card.active {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+  .af-name { font-size: 12px; font-weight: 600; }
+  .af-desc { font-size: 10.5px; color: var(--text-dim); }
+  .af-badge { font-size: 10.5px; font-family: var(--font-mono); color: var(--text-dim); }
 
-  /* Agents Fleet */
-  .agent-fleet-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .fleet-item {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: border-color 0.2s;
-  }
-  .fleet-item.active-agent {
-    border-color: var(--accent);
-    background: rgba(0, 229, 255, 0.08);
-  }
-  .fleet-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .fleet-info { flex: 1; min-width: 0; }
-  .fleet-name { font-size: 12px; font-weight: 600; }
-  .fleet-desc { font-size: 10px; color: var(--text-muted); }
-  .fleet-count {
-    font-size: 10px;
-    font-family: var(--font-mono);
-    color: var(--text-secondary);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border);
-    padding: 2px 7px;
-    border-radius: 99px;
-  }
-
-  /* Labs */
   .lab-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 6px;
   }
-  .lab-box {
+  .lab-card {
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+  .lab-title { font-size: 10.5px; color: var(--text-dim); font-weight: 600; }
+  .lab-val { font-size: 15px; font-weight: 700; font-family: var(--font-mono); margin-top: 2px; }
+
+  .telemetry-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
     padding: 10px 12px;
-  }
-  .lab-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 10px;
-    font-family: var(--font-mono);
-    color: var(--text-muted);
-  }
-  .lab-value {
-    font-size: 16px;
-    font-weight: 700;
-    font-family: var(--font-mono);
-    margin-top: 4px;
-  }
-  .lab-value.ok { color: var(--accent-emerald); }
-  .lab-value.warn { color: var(--warn); }
-  .lab-value.danger { color: var(--danger); }
-
-  /* Gaps */
-  .gap-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .gap-entry {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 11.5px;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .gap-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--warn);
-    flex-shrink: 0;
-  }
-
-  /* Telemetry Summary Box */
-  .telemetry-dashboard {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
-  }
-  .telemetry-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 0;
     font-size: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   }
-  .telemetry-row:last-child { border-bottom: none; }
-  .telemetry-val {
-    font-family: var(--font-mono);
-    color: var(--accent);
-    font-weight: 600;
+  .tel-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid #273549;
   }
+  .tel-row:last-child { border-bottom: none; }
+  .tel-val { font-family: var(--font-mono); font-weight: 600; color: #60a5fa; }
 
-  /* ── Universal Login Modal ── */
-  .login-overlay {
+  /* ── Modals (Universal Login & Patient Intake) ── */
+  .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(7, 10, 18, 0.95);
-    backdrop-filter: blur(20px);
-    z-index: 9999;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 999;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 16px;
   }
-  .login-modal {
+  .modal-box {
     background: var(--bg-surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 36px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
     width: 100%;
-    max-width: 460px;
-    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 229, 255, 0.1);
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .form-group {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-  }
-  .login-brand-center {
-    text-align: center;
-  }
-  .login-logo-ring {
-    width: 56px; height: 56px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #00e5ff, #8b5cf6);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 26px;
+    gap: 4px;
     margin-bottom: 12px;
-    box-shadow: 0 10px 24px rgba(0, 229, 255, 0.25);
   }
-  .login-h1 {
-    font-size: 24px;
-    font-weight: 800;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-  }
-  .login-sub {
+  .form-label {
     font-size: 12px;
+    font-weight: 600;
     color: var(--text-muted);
-    font-family: var(--font-mono);
   }
-  .login-spec-badges {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 8px;
-  }
-  .login-spec-badge {
-    font-size: 9.5px;
-    font-family: var(--font-mono);
-    color: var(--text-muted);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border);
-    padding: 2px 7px;
-    border-radius: 4px;
-  }
-  .login-input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .login-label {
-    font-size: 11px;
-    font-family: var(--font-mono);
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .login-input {
-    width: 100%;
+  .form-input {
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    color: var(--text-primary);
-    font-size: 13px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 9px 12px;
+    color: var(--text-main);
+    font-size: 14px;
     outline: none;
-    transition: border-color 0.2s;
   }
-  .login-input:focus { border-color: var(--accent); }
-  .login-submit-btn {
+  .form-input:focus { border-color: var(--primary); }
+  .btn-modal-primary {
     width: 100%;
-    background: linear-gradient(135deg, #00e5ff, #8b5cf6);
+    background: var(--primary);
     color: #ffffff;
     border: none;
-    border-radius: 10px;
-    padding: 13px;
-    font-size: 13.5px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 6px;
-    box-shadow: 0 6px 20px rgba(0, 229, 255, 0.3);
-    transition: opacity 0.2s;
-  }
-  .login-submit-btn:hover { opacity: 0.92; }
-  .demo-guest-btn {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    padding: 11px;
-    border-radius: 10px;
-    font-size: 12.5px;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
   }
-  .demo-guest-btn:hover {
-    background: rgba(0, 229, 255, 0.08);
-    border-color: var(--accent);
-    color: var(--accent);
+  .btn-modal-primary:hover { background: var(--primary-hover); }
+  .btn-modal-secondary {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 9px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 8px;
   }
-  .login-notice {
-    font-size: 11px;
-    color: var(--text-muted);
-    text-align: center;
-    line-height: 1.5;
-  }
+  .btn-modal-secondary:hover { border-color: var(--border-light); }
 
-  /* ── Responsive Mobile Rules ── */
+  /* ── Mobile Rules ── */
   @media (max-width: 900px) {
     header { padding: 10px 14px; }
-    .header-telemetry .meta-pill { display: none; }
     .brand-sub { display: none; }
-    .brand-badge { display: none; }
+    .brand-tag { display: none; }
+    .header-actions .status-badge { display: none; }
 
-    .mobile-nav {
+    .mobile-tabs {
       display: flex;
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border);
-      padding: 6px 10px;
-      gap: 6px;
-      position: sticky;
-      top: 62px;
-      z-index: 90;
-    }
-    .mobile-tab-btn {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 9px 6px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      color: var(--text-muted);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-    .mobile-tab-btn.active {
-      background: rgba(0, 229, 255, 0.12);
-      border-color: var(--accent);
-      color: var(--accent);
     }
 
     .main-layout {
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 110px);
-      height: calc(100dvh - 110px);
-      overflow: hidden;
+      height: calc(100vh - 105px);
+      height: calc(100dvh - 105px);
     }
-    .main-layout[data-active-tab="patients"] .sidebar { display: flex; flex: 1; width: 100%; border-right: none; }
-    .main-layout[data-active-tab="patients"] .main-panel,
-    .main-layout[data-active-tab="patients"] .right-panel { display: none !important; }
 
-    .main-layout[data-active-tab="consultation"] .main-panel { display: flex; flex: 1; width: 100%; height: 100%; }
-    .main-layout[data-active-tab="consultation"] .sidebar,
-    .main-layout[data-active-tab="consultation"] .right-panel { display: none !important; }
+    .main-layout[data-tab="patients"] .sidebar { display: flex; flex: 1; width: 100%; border-right: none; }
+    .main-layout[data-tab="patients"] .main-panel,
+    .main-layout[data-tab="patients"] .right-panel { display: none !important; }
 
-    .main-layout[data-active-tab="intelligence"] .right-panel { display: flex; flex: 1; width: 100%; border-left: none; }
-    .main-layout[data-active-tab="intelligence"] .sidebar,
-    .main-layout[data-active-tab="intelligence"] .main-panel { display: none !important; }
+    .main-layout[data-tab="consultation"] .main-panel { display: flex; flex: 1; width: 100%; height: 100%; }
+    .main-layout[data-tab="consultation"] .sidebar,
+    .main-layout[data-tab="consultation"] .right-panel { display: none !important; }
 
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .main-layout[data-tab="intelligence"] .right-panel { display: flex; flex: 1; width: 100%; border-left: none; }
+    .main-layout[data-tab="intelligence"] .sidebar,
+    .main-layout[data-tab="intelligence"] .main-panel { display: none !important; }
+
+    .stats-grid { grid-template-columns: 1fr 1fr; }
     .patient-header-area { padding: 12px 14px; }
-    .query-area { padding: 14px; }
-    .input-bar { padding: 10px 14px 14px; }
+    .ph-top-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .query-area { padding: 12px; }
+    .input-bar { padding: 10px 12px 14px; }
     textarea { font-size: 16px; height: 44px; }
-    .send-btn { height: 44px; padding: 0 14px; }
-  }
-
-  /* Scrollbars */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
-
-  .intake-btn {
-    background: linear-gradient(135deg, rgba(0, 229, 255, 0.2), rgba(139, 92, 246, 0.2));
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 9px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .intake-btn:hover {
-    background: var(--accent);
-    color: #070a12;
-    box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
   }
 </style>
 </head>
 <body>
 
-<!-- ── Universal Enterprise Login Modal ── -->
-<div id="login-overlay" class="login-overlay">
-  <div class="login-modal">
-    <div class="login-brand-center">
-      <div class="login-logo-ring">🏥</div>
-      <h1 class="login-h1">CareFlow Enterprise</h1>
-      <p class="login-sub">Clinical Multi-Agent Orchestration Gateway</p>
-      <div class="login-spec-badges">
-        <span class="login-spec-badge">HIPAA Simulation</span>
-        <span class="login-spec-badge">FHIR R4</span>
-        <span class="login-spec-badge">Gemini 2.5 Flash</span>
-      </div>
+<!-- ── Login Modal ── -->
+<div id="login-overlay" class="modal-overlay">
+  <div class="modal-box">
+    <div style="margin-bottom:16px; text-align:center;">
+      <h2 style="font-size:18px;font-weight:700;">CareFlow Clinical Gateway</h2>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">Internal Multi-Agent Clinical Decision Support</p>
     </div>
 
-    <form onsubmit="handleLoginSubmit(event)" style="display:flex;flex-direction:column;gap:14px">
-      <div class="login-input-group">
-        <label class="login-label">Clinician ID / Name</label>
-        <input type="text" id="login-username" required placeholder="e.g. Dr. Sarah Mitchell, MD or Interviewer"
-          value="Dr. Sarah Mitchell, MD" class="login-input">
+    <form onsubmit="handleLoginSubmit(event)">
+      <div class="form-group">
+        <label class="form-label">Clinician Name / Username</label>
+        <input type="text" id="login-username" class="form-input" required value="Dr. Sarah Mitchell" placeholder="Enter your name">
       </div>
 
-      <div class="login-input-group">
-        <label class="login-label">Clinical Role / Specialty</label>
-        <select id="login-role" class="login-input" style="cursor:pointer">
-          <option value="Attending Physician">Attending Physician (Internal Medicine)</option>
-          <option value="Chief Medical Officer">Chief Medical Officer (CMO)</option>
-          <option value="Clinical AI Reviewer">Clinical AI Reviewer / Evaluator</option>
-          <option value="Care Coordinator">Lead Care Coordinator</option>
+      <div class="form-group">
+        <label class="form-label">Role</label>
+        <select id="login-role" class="form-input">
+          <option value="Attending Physician">Attending Physician</option>
+          <option value="Chief Medical Officer">Chief Medical Officer</option>
+          <option value="Clinical Reviewer">Clinical Reviewer</option>
+          <option value="Care Coordinator">Care Coordinator</option>
         </select>
       </div>
 
-      <div class="login-input-group">
-        <label class="login-label">Passkey / Access Token</label>
-        <input type="password" id="login-password" placeholder="Any password accepted for demo"
-          value="careflow2026" class="login-input">
+      <div class="form-group">
+        <label class="form-label">Passkey</label>
+        <input type="password" id="login-password" class="form-input" value="careflow2026" placeholder="Any passkey accepted for demo">
       </div>
 
-      <button type="submit" id="login-btn" class="login-submit-btn">
-        Enter Clinical Console →
-      </button>
-
-      <button type="button" onclick="instantGuestLogin()" class="demo-guest-btn">
-        <span>⚡ 1-Click Instant Reviewer Access (Guest Pass)</span>
-      </button>
+      <button type="submit" class="btn-modal-primary">Sign In to Workspace</button>
+      <button type="button" onclick="instantGuestLogin()" class="btn-modal-secondary">Guest Demo Access (1-Click)</button>
     </form>
-
-    <div class="login-notice">
-      Notice: Universal Reviewer Access enabled. Any username and password will be accepted for clinical evaluation and platform testing.
-    </div>
+    <p style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:12px;">Universal access enabled for review and evaluation.</p>
   </div>
 </div>
 
-<!-- ── Clinical Patient Intake & AI Generator Modal ── -->
-<div id="intake-modal" class="login-overlay" style="display:none">
-  <div class="login-modal" style="max-width: 540px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#00e5ff,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:18px">🩺</div>
-        <div>
-          <h2 style="font-size:17px;font-weight:800;color:var(--text-primary)">EHR Patient Intake & AI Generator</h2>
-          <p style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">PostgreSQL & FHIR R4 Core Persistence</p>
-        </div>
-      </div>
-      <button onclick="closeIntakeModal()" style="background:transparent;border:none;color:var(--text-muted);font-size:20px;cursor:pointer">✕</button>
+<!-- ── Patient Intake Modal ── -->
+<div id="intake-modal" class="modal-overlay" style="display:none">
+  <div class="modal-box" style="max-width:520px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h3 style="font-size:16px;font-weight:700;">Patient EHR Intake</h3>
+      <button onclick="closeIntakeModal()" style="background:none;border:none;color:var(--text-muted);font-size:18px;cursor:pointer;">✕</button>
     </div>
 
-    <!-- Mode Switcher -->
-    <div style="display:flex;gap:8px;background:var(--bg-card);padding:4px;border-radius:8px;border:1px solid var(--border);margin-bottom:8px">
-      <button id="intake-tab-ai" class="filter-pill active" style="flex:1;padding:8px" onclick="switchIntakeMode('ai')">✨ AI-Assisted Intake</button>
-      <button id="intake-tab-manual" class="filter-pill" style="flex:1;padding:8px" onclick="switchIntakeMode('manual')">📝 Manual EHR Entry</button>
+    <div style="display:flex;gap:6px;background:var(--bg-card);padding:4px;border-radius:6px;margin-bottom:14px;">
+      <button id="intake-tab-ai" class="filter-pill active" style="flex:1;text-align:center;padding:6px;" onclick="switchIntakeMode('ai')">AI-Assisted Intake</button>
+      <button id="intake-tab-man" class="filter-pill" style="flex:1;text-align:center;padding:6px;" onclick="switchIntakeMode('manual')">Manual Entry</button>
     </div>
 
     <!-- AI Intake Form -->
-    <form id="ai-intake-form" onsubmit="handleAiPatientIntake(event)" style="display:flex;flex-direction:column;gap:12px">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="login-input-group">
-          <label class="login-label">Patient Full Name *</label>
-          <input type="text" id="ai-intake-name" required placeholder="e.g. Vikram Patel" class="login-input">
+    <form id="ai-intake-form" onsubmit="handleAiPatientIntake(event)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-group">
+          <label class="form-label">Patient Name *</label>
+          <input type="text" id="ai-intake-name" class="form-input" required placeholder="e.g. Vikram Patel">
         </div>
-        <div class="login-input-group">
-          <label class="login-label">Patient ID / MRN (Optional)</label>
-          <input type="text" id="ai-intake-id" placeholder="Auto-assigned (e.g. P006)" class="login-input">
+        <div class="form-group">
+          <label class="form-label">MRN / ID (Optional)</label>
+          <input type="text" id="ai-intake-id" class="form-input" placeholder="Auto-generated">
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="login-input-group">
-          <label class="login-label">Age</label>
-          <input type="number" id="ai-intake-age" value="52" min="1" max="115" class="login-input">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-group">
+          <label class="form-label">Age</label>
+          <input type="number" id="ai-intake-age" class="form-input" value="52">
         </div>
-        <div class="login-input-group">
-          <label class="login-label">Gender</label>
-          <select id="ai-intake-gender" class="login-input">
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <select id="ai-intake-gender" class="form-input">
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
@@ -1379,236 +954,199 @@
         </div>
       </div>
 
-      <div class="login-input-group">
-        <label class="login-label">Chief Diagnosis / Clinical Complaint *</label>
-        <input type="text" id="ai-intake-condition" required placeholder="e.g. Chronic Kidney Disease Stage 3 with uncontrolled hypertension" class="login-input">
+      <div class="form-group">
+        <label class="form-label">Clinical Condition / Chief Complaint *</label>
+        <input type="text" id="ai-intake-condition" class="form-input" required placeholder="e.g. Type 2 Diabetes with elevated BP">
       </div>
 
-      <div class="login-input-group">
-        <label class="login-label">Clinical Intake Notes & Symptoms (Optional)</label>
-        <textarea id="ai-intake-notes" placeholder="e.g. Patient reports bilateral foot edema, fatigue, and missed visits..." rows="2" style="height:55px;font-size:12px"></textarea>
+      <div class="form-group">
+        <label class="form-label">Clinical Notes (Optional)</label>
+        <textarea id="ai-intake-notes" class="form-input" style="height:60px;" placeholder="Patient reports occasional dizziness, missed follow-ups..."></textarea>
       </div>
 
-      <button type="submit" id="ai-intake-btn" class="login-submit-btn" style="margin-top:4px">
-        ✨ Generate EHR Profile with AI & Save to PostgreSQL →
-      </button>
+      <button type="submit" id="ai-intake-btn" class="btn-modal-primary" style="margin-top:4px;">Generate & Save to Database</button>
     </form>
 
     <!-- Manual Intake Form -->
-    <form id="manual-intake-form" onsubmit="handleManualPatientIntake(event)" style="display:none;flex-direction:column;gap:12px">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="login-input-group">
-          <label class="login-label">Patient Full Name *</label>
-          <input type="text" id="man-intake-name" required placeholder="e.g. Ananya Das" class="login-input">
+    <form id="manual-intake-form" onsubmit="handleManualPatientIntake(event)" style="display:none;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-group">
+          <label class="form-label">Patient Name *</label>
+          <input type="text" id="man-intake-name" class="form-input" required placeholder="e.g. Ananya Das">
         </div>
-        <div class="login-input-group">
-          <label class="login-label">Patient ID / MRN</label>
-          <input type="text" id="man-intake-id" placeholder="e.g. P007" class="login-input">
+        <div class="form-group">
+          <label class="form-label">MRN / ID</label>
+          <input type="text" id="man-intake-id" class="form-input" placeholder="e.g. P007">
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-        <div class="login-input-group">
-          <label class="login-label">Age</label>
-          <input type="number" id="man-intake-age" value="48" class="login-input">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div class="form-group">
+          <label class="form-label">Age</label>
+          <input type="number" id="man-intake-age" class="form-input" value="48">
         </div>
-        <div class="login-input-group">
-          <label class="login-label">Gender</label>
-          <select id="man-intake-gender" class="login-input">
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <select id="man-intake-gender" class="form-input">
             <option value="Female">Female</option>
             <option value="Male">Male</option>
             <option value="Other">Other</option>
           </select>
         </div>
-        <div class="login-input-group">
-          <label class="login-label">Risk (0.0-1.0)</label>
-          <input type="number" step="0.05" id="man-intake-risk" value="0.65" min="0" max="1" class="login-input">
+        <div class="form-group">
+          <label class="form-label">Risk (0-1)</label>
+          <input type="number" step="0.05" id="man-intake-risk" class="form-input" value="0.65">
         </div>
       </div>
 
-      <div class="login-input-group">
-        <label class="login-label">Primary Condition *</label>
-        <input type="text" id="man-intake-condition" required placeholder="e.g. Hypertension + CKD Stage 3" class="login-input">
+      <div class="form-group">
+        <label class="form-label">Primary Diagnosis *</label>
+        <input type="text" id="man-intake-condition" class="form-input" required placeholder="e.g. Hypertension + CKD Stage 3">
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="login-input-group">
-          <label class="login-label">Blood Pressure (BP)</label>
-          <input type="text" id="man-intake-bp" value="138/88" class="login-input">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-group">
+          <label class="form-label">BP (e.g. 138/88)</label>
+          <input type="text" id="man-intake-bp" class="form-input" value="138/88">
         </div>
-        <div class="login-input-group">
-          <label class="login-label">Primary Lab (e.g. HbA1c)</label>
-          <input type="text" id="man-intake-lab" value="7.8" class="login-input">
+        <div class="form-group">
+          <label class="form-label">Primary Lab (e.g. HbA1c)</label>
+          <input type="text" id="man-intake-lab" class="form-input" value="7.8">
         </div>
       </div>
 
-      <div class="login-input-group">
-        <label class="login-label">Medications (comma-separated)</label>
-        <input type="text" id="man-intake-meds" value="Metformin 500mg, Lisinopril 10mg" class="login-input">
+      <div class="form-group">
+        <label class="form-label">Medications (comma-separated)</label>
+        <input type="text" id="man-intake-meds" class="form-input" value="Metformin 500mg, Lisinopril 10mg">
       </div>
 
-      <button type="submit" id="man-intake-btn" class="login-submit-btn" style="margin-top:4px">
-        💾 Save Patient to PostgreSQL Database →
-      </button>
+      <button type="submit" id="man-intake-btn" class="btn-modal-primary" style="margin-top:4px;">Save Patient Record</button>
     </form>
   </div>
 </div>
 
-<!-- ── Enterprise Top Header ── -->
+<!-- ── Main Top Navbar ── -->
 <header>
-  <div class="header-left">
-    <div class="logo-icon-wrap">🩺</div>
+  <div class="header-brand">
+    <div class="brand-logo-icon">CF</div>
     <div>
       <div class="brand-title">
         CareFlow
-        <span class="brand-badge">Enterprise v2.5</span>
+        <span class="brand-tag">Clinical AI</span>
       </div>
-      <div class="brand-sub">Autonomous Clinical Multi-Agent Core • Cleveland Clinic Synthetic EHR</div>
+      <div class="brand-sub">Multi-Agent Orchestration Core</div>
     </div>
   </div>
 
-  <div class="header-telemetry">
-    <div class="status-pill">
+  <div class="header-actions">
+    <div class="status-badge">
       <div class="status-dot"></div>
-      <span id="api-status">Connecting to Orchestrator...</span>
+      <span id="api-status">Connecting...</span>
     </div>
-    <div class="meta-pill">⚡ 15 Guidelines</div>
-    <div class="meta-pill">🔗 MCP Active</div>
 
-    <div class="user-profile-btn">
-      <div class="user-avatar">👨‍⚕️</div>
-      <div>
-        <div class="user-name" id="auth-username-display">Dr. Sarah Mitchell</div>
-        <div class="user-role" id="auth-role-display">Attending Physician</div>
-      </div>
-      <button onclick="handleLogout()" class="sign-out-btn">Sign Out</button>
+    <div class="user-badge">
+      <span id="auth-username-display">Dr. Sarah Mitchell</span>
+      <span style="color:var(--text-dim);">•</span>
+      <span id="auth-role-display" style="color:var(--text-muted);">Attending</span>
     </div>
+
+    <button onclick="handleLogout()" class="btn-signout">Sign Out</button>
   </div>
 </header>
 
-<!-- ── Mobile View Switcher ── -->
-<nav class="mobile-nav" id="mobile-nav">
-  <button class="mobile-tab-btn active" id="tab-btn-patients" onclick="switchMobileTab('patients')">
-    <span>👥 Patients</span>
-  </button>
-  <button class="mobile-tab-btn" id="tab-btn-consultation" onclick="switchMobileTab('consultation')">
-    <span>💬 Consult & Brainstorm</span>
-  </button>
-  <button class="mobile-tab-btn" id="tab-btn-intelligence" onclick="switchMobileTab('intelligence')">
-    <span>📊 AI & Data</span>
-  </button>
+<!-- ── Mobile Tabs ── -->
+<nav class="mobile-tabs" id="mobile-tabs">
+  <button class="mobile-tab-btn active" id="tab-btn-patients" onclick="switchMobileTab('patients')">Patients</button>
+  <button class="mobile-tab-btn" id="tab-btn-consultation" onclick="switchMobileTab('consultation')">Consultation</button>
+  <button class="mobile-tab-btn" id="tab-btn-intelligence" onclick="switchMobileTab('intelligence')">Data & Labs</button>
 </nav>
 
-<!-- ── Main 3-Column Workspace ── -->
-<div class="main-layout" id="main-layout" data-active-tab="patients">
+<!-- ── Main 3-Column Layout ── -->
+<div class="main-layout" id="main-layout" data-tab="patients">
 
   <!-- ── Left Column: Patient Roster ── -->
   <aside class="sidebar">
     <div class="sidebar-header">
-      <div class="sidebar-headline">
-        <span class="sidebar-title">EHR Patient Roster</span>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span class="patient-count-badge" id="patient-count-pill">5 Patients</span>
-          <button class="intake-btn" onclick="openIntakeModal()">+ Intake</button>
+      <div class="sidebar-top">
+        <span class="sidebar-title">EHR Patients</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span id="patient-count-pill" style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">0 Patients</span>
+          <button class="btn-intake" onclick="openIntakeModal()">+ Intake</button>
         </div>
       </div>
-      <div class="search-wrap">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="patient-search-input" class="search-input" placeholder="Search patient, condition, MRN..." oninput="handlePatientSearch(this.value)">
-      </div>
-      <div class="patient-filter-row">
+      <input type="text" id="patient-search-input" class="search-input" placeholder="Search name or diagnosis..." oninput="handlePatientSearch(this.value)">
+      <div class="filter-pills">
         <button class="filter-pill active" onclick="filterPatients('all', this)">All</button>
         <button class="filter-pill" onclick="filterPatients('critical', this)">Critical</button>
         <button class="filter-pill" onclick="filterPatients('diabetes', this)">Diabetes</button>
         <button class="filter-pill" onclick="filterPatients('cardiac', this)">Cardiac</button>
-        <button class="filter-pill" onclick="filterPatients('renal', this)">Renal</button>
       </div>
     </div>
 
-    <div class="patient-scroll" id="patient-list">
-      <div style="padding:20px;color:var(--text-muted);font-size:12px;text-align:center;">Loading patient records from FHIR core...</div>
+    <div class="patient-list" id="patient-list">
+      <div style="padding:16px;color:var(--text-muted);font-size:12px;text-align:center;">Loading patient records...</div>
     </div>
   </aside>
 
-  <!-- ── Center Column: Consultation & Brainstorming ── -->
+  <!-- ── Center Column: Consultation Workspace ── -->
   <main class="main-panel">
-    <!-- Patient Header Dossier -->
-    <div class="patient-header-area" id="patient-header-area" style="display:none">
+    <!-- Patient Header Area -->
+    <div class="patient-header-area" id="patient-header-area" style="display:none;">
       <div class="ph-top-row">
-        <div>
+        <div class="ph-title-block">
           <div class="ph-patient-title" id="hdr-name">Patient Name</div>
-          <div style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono);margin-top:2px" id="hdr-meta">Age • Gender • Insurance</div>
+          <div class="ph-patient-meta" id="hdr-meta">MRN • Age • Gender • Insurance</div>
         </div>
+
+        <!-- Clean, Wrapped Badges with nowrap -->
         <div class="ph-badge-group">
           <div id="hdr-badges"></div>
-          <button class="action-btn-secondary" onclick="exportSoapNote()">📑 Export SOAP Note</button>
+          <button class="btn-soap" onclick="exportSoapNote()">Export SOAP Note</button>
         </div>
       </div>
 
       <div class="stats-grid" id="stats-row"></div>
     </div>
 
-    <!-- Message & Deliberation Stream -->
+    <!-- Conversation Stream -->
     <div class="query-area" id="query-area">
       <div class="welcome-state" id="welcome-state">
-        <div class="welcome-icon-box">🧠</div>
-        <div class="welcome-title">Clinical AI Deliberation Engine</div>
-        <div class="welcome-sub">Select any patient from the roster to launch real-time multi-agent triage. CareFlow will dynamically brainstorm, check clinical protocols (ADA, ACC, KDIGO), and formulate an actionable care plan.</div>
+        <div class="welcome-title">Clinical Consultation Console</div>
+        <div class="welcome-desc">Select a patient from the roster to start multi-agent triage. CareFlow will cross-examine institutional guidelines and formulate an actionable care plan.</div>
       </div>
     </div>
 
-    <!-- Input Console -->
-    <div class="input-bar" id="input-bar" style="display:none">
+    <!-- Input Bar -->
+    <div class="input-bar" id="input-bar" style="display:none;">
       <div class="scenarios-row" id="quick-prompts"></div>
-      <div class="input-box-row">
-        <textarea id="query-input" placeholder="Enter clinical situation, order triage, or ask for guidance..." rows="1" onkeydown="handleKey(event)"></textarea>
-        <button class="send-btn" id="send-btn" onclick="sendQuery()">
-          <span>Run Triage</span>
-          <span>↵</span>
-        </button>
+      <div class="input-row">
+        <textarea id="query-input" placeholder="Ask a clinical question, review labs, or plan treatment..." onkeydown="handleKey(event)"></textarea>
+        <button class="btn-send" id="send-btn" onclick="sendQuery()">Submit Query</button>
       </div>
     </div>
   </main>
 
-  <!-- ── Right Column: AI Fleet, Labs & Telemetry ── -->
+  <!-- ── Right Column: Clinical Intelligence & Labs ── -->
   <aside class="right-panel">
-    <!-- Active Agent Fleet -->
     <div>
-      <div class="panel-section-title">
-        <span>Active Multi-Agent Fleet</span>
-        <span style="color:var(--accent-emerald)">4 Online</span>
-      </div>
-      <div class="agent-fleet-grid" id="agent-grid">
-        <!-- Populated by JS -->
-      </div>
+      <div class="section-title">Specialized Clinical Agents</div>
+      <div class="agent-fleet-list" id="agent-grid"></div>
     </div>
 
-    <!-- Lab Biomarkers -->
-    <div id="labs-section" style="display:none">
-      <div class="panel-section-title">
-        <span>Patient Biomarkers & Labs</span>
-        <span style="font-size:10px;color:var(--text-muted)">FHIR R4</span>
-      </div>
+    <div id="labs-section" style="display:none;">
+      <div class="section-title">Patient Biomarkers</div>
       <div class="lab-grid" id="labs-grid"></div>
     </div>
 
-    <!-- Active Care Gaps -->
-    <div id="gaps-section" style="display:none">
-      <div class="panel-section-title">
-        <span>Open Care Gaps</span>
-        <span id="gaps-count-badge" style="color:var(--warn)">0</span>
-      </div>
-      <ul class="gap-list" id="gap-list"></ul>
+    <div id="gaps-section" style="display:none;">
+      <div class="section-title">Open Care Gaps</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;" id="gap-list"></ul>
     </div>
 
-    <!-- Real-time Evaluation Telemetry -->
     <div>
-      <div class="panel-section-title">
-        <span>Observability & Eval Telemetry</span>
-        <span style="color:var(--accent)">Live</span>
-      </div>
-      <div class="telemetry-dashboard" id="eval-summary">
-        <div style="font-size:11.5px;color:var(--text-muted);text-align:center;padding:10px 0;">No queries evaluated yet.<br>Metrics update after first agent triage.</div>
+      <div class="section-title">Telemetry & Reliability</div>
+      <div class="telemetry-card" id="eval-summary">
+        <div style="color:var(--text-dim);text-align:center;padding:8px 0;">Awaiting first query evaluation.</div>
       </div>
     </div>
   </aside>
@@ -1618,24 +1156,23 @@
 const API = (window.location.protocol.startsWith('http') && window.location.origin) ? window.location.origin : 'http://localhost:8000';
 
 const AGENTS = [
-  { id: 'patient_navigator', name: 'Patient Navigator', desc: 'Scheduling, refills, intake outreach', color: '#00e5ff', emoji: '🗓️' },
-  { id: 'care_coordinator',  name: 'Care Coordinator',  desc: 'Referrals, SDOH, multidisciplinary care', color: '#8b5cf6', emoji: '🔗' },
-  { id: 'quality_analyst',   name: 'Quality & Risk',    desc: 'Risk scoring, guideline compliance',     color: '#f59e0b', emoji: '📊' },
-  { id: 'ai_nurse',          name: 'AI Nurse',          desc: 'Med safety, vitals prep, triage',       color: '#10b981', emoji: '💊' },
+  { id: 'patient_navigator', name: 'Patient Navigator', desc: 'Scheduling, intake, appointments' },
+  { id: 'care_coordinator',  name: 'Care Coordinator',  desc: 'Referrals, SDOH, multidisciplinary' },
+  { id: 'quality_analyst',   name: 'Quality & Risk',    desc: 'Risk scoring, guideline compliance' },
+  { id: 'ai_nurse',          name: 'Clinical AI Nurse', desc: 'Med safety, vitals prep, triage' },
 ];
 
 const QUICK_PROMPTS = {
-  P001: ["🚨 HbA1c is uncontrolled at 8.2% — formulate immediate clinical action plan", "📅 Patient missed 2 follow-ups — reschedule and coordinate transport barrier", "⚠️ BP at 145/92 with Stage 2 Hypertension — assess risk and protocol"],
-  P002: ["📋 Spirometry test is overdue — coordinate pulmonary consult and testing", "🧠 Patient reports severe work anxiety — assess mental health gap", "📝 Prepare comprehensive clinical briefing for upcoming review"],
-  P003: ["🚨 eGFR declining to 28 — urgent nephrology referral & medication audit", "❤️ BNP elevated at 820 — assess CHF decompensation risk", "🤝 Patient lives alone — coordinate community social support services"],
-  P004: ["🩸 Hemoglobin low at 9.8 — review iron therapy and nutritional deficit", "🥗 Clinical nutritionist referral is pending — coordinate authorization", "👶 Patient seeking fertility counseling — navigate specialty clinic booking"],
-  P005: ["🫀 Cardiac rehab enrollment pending post-MI — expedite clearance", "🚭 Patient is post-MI smoker — formulate smoking cessation care plan", "🏃 Stress echocardiogram pending — schedule cardiology slot"],
+  P001: ["HbA1c is uncontrolled at 8.2% — formulate immediate clinical action plan", "Patient missed 2 follow-ups — reschedule and coordinate transport barrier", "BP at 145/92 with Stage 2 Hypertension — assess risk and protocol"],
+  P002: ["Spirometry test is overdue — coordinate pulmonary consult and testing", "Patient reports severe work anxiety — assess mental health gap", "Prepare comprehensive clinical briefing for upcoming review"],
+  P003: ["eGFR declining to 28 — urgent nephrology referral & medication audit", "BNP elevated at 820 — assess CHF decompensation risk", "Patient lives alone — coordinate community social support services"],
+  P004: ["Hemoglobin low at 9.8 — review iron therapy and nutritional deficit", "Clinical nutritionist referral is pending — coordinate authorization", "Patient seeking fertility counseling — navigate specialty clinic booking"],
+  P005: ["Cardiac rehab enrollment pending post-MI — expedite clearance", "Patient is post-MI smoker — formulate smoking cessation care plan", "Stress echocardiogram pending — schedule cardiology slot"],
 };
 
 let allPatients = [];
 let selectedPatient = null;
 let agentUsage = {};
-let messages = [];
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
 async function boot() {
@@ -1645,43 +1182,39 @@ async function boot() {
     if (!res.ok) throw new Error();
     allPatients = await res.json();
     renderPatientList(allPatients);
-    document.getElementById('api-status').textContent = 'Orchestrator Online ✓';
+    document.getElementById('api-status').textContent = 'Orchestrator Online';
     document.getElementById('patient-count-pill').textContent = `${allPatients.length} Patients`;
     
-    // Auto-select first patient if available
     if (allPatients.length > 0) {
       selectPatient(allPatients[0].id);
     }
   } catch {
     document.getElementById('api-status').textContent = 'Orchestrator Offline';
-    document.getElementById('api-status').style.color = '#f43f5e';
-    document.getElementById('patient-list').innerHTML = '<div style="padding:20px;color:#f43f5e;font-size:12px;text-align:center;">Cannot reach CareFlow API.<br>Verify backend uvicorn is running.</div>';
+    document.getElementById('api-status').style.color = '#ef4444';
+    document.getElementById('patient-list').innerHTML = '<div style="padding:16px;color:#ef4444;font-size:12px;text-align:center;">Cannot reach backend API.</div>';
   }
 }
 
 function renderPatientList(patients) {
   const el = document.getElementById('patient-list');
   if (!patients.length) {
-    el.innerHTML = '<div style="padding:20px;color:var(--text-muted);font-size:12px;text-align:center;">No matching patients found.</div>';
+    el.innerHTML = '<div style="padding:16px;color:var(--text-dim);font-size:12px;text-align:center;">No matching records.</div>';
     return;
   }
   el.innerHTML = patients.map(p => {
-    const risk = p.risk_score;
-    const riskColor = risk > 0.8 ? '#f43f5e' : risk > 0.6 ? '#fb923c' : risk > 0.4 ? '#f59e0b' : '#10b981';
+    const risk = p.risk_score || 0.5;
+    const riskColor = risk > 0.8 ? '#ef4444' : risk > 0.6 ? '#f97316' : risk > 0.4 ? '#f59e0b' : '#10b981';
     const isSelected = selectedPatient && selectedPatient.id === p.id;
     return `
     <div class="patient-card ${isSelected ? 'active' : ''}" id="pc-${p.id}" onclick="selectPatient('${p.id}')">
-      <div class="pc-top">
-        <div class="patient-name">${escHtml(p.name)}</div>
-        <div class="pc-mrn">#${p.id}</div>
+      <div class="pc-header">
+        <span class="pc-name">${escHtml(p.name)}</span>
+        <span class="pc-id">#${p.id}</span>
       </div>
-      <div class="patient-meta">${p.age}y • ${p.gender} • ${escHtml(p.insurance)}</div>
+      <div class="pc-details">${p.age}y • ${p.gender} • ${escHtml(p.insurance || 'Standard')}</div>
       <div class="pc-condition">${escHtml(p.condition)}</div>
-      <div class="risk-track">
-        <div class="risk-bar-bg">
-          <div class="risk-bar-fill" style="width:${risk * 100}%;background:${riskColor}"></div>
-        </div>
-        <div class="risk-pct" style="color:${riskColor}">${Math.round(risk * 100)}%</div>
+      <div class="risk-bar">
+        <div class="risk-fill" style="width:${risk * 100}%;background:${riskColor};"></div>
       </div>
     </div>`;
   }).join('');
@@ -1708,26 +1241,23 @@ function filterPatients(category, btn) {
   if (category === 'all') {
     renderPatientList(allPatients);
   } else if (category === 'critical') {
-    renderPatientList(allPatients.filter(p => p.risk_score > 0.7));
+    renderPatientList(allPatients.filter(p => (p.risk_score || 0) > 0.7));
   } else if (category === 'diabetes') {
-    renderPatientList(allPatients.filter(p => p.condition.toLowerCase().includes('diabet')));
+    renderPatientList(allPatients.filter(p => (p.condition || '').toLowerCase().includes('diabet')));
   } else if (category === 'cardiac') {
-    renderPatientList(allPatients.filter(p => p.condition.toLowerCase().includes('heart') || p.condition.toLowerCase().includes('cardiac')));
-  } else if (category === 'renal') {
-    renderPatientList(allPatients.filter(p => p.condition.toLowerCase().includes('kidney') || p.condition.toLowerCase().includes('ckd')));
+    renderPatientList(allPatients.filter(p => (p.condition || '').toLowerCase().includes('heart') || (p.condition || '').toLowerCase().includes('cardiac')));
   }
 }
 
 function renderAgentGrid(activeId = null) {
   const el = document.getElementById('agent-grid');
   el.innerHTML = AGENTS.map(a => `
-    <div class="fleet-item ${activeId === a.id ? 'active-agent' : ''}" id="ag-${a.id}">
-      <div class="fleet-dot" style="background:${a.color};box-shadow:0 0 8px ${a.color}"></div>
-      <div class="fleet-info">
-        <div class="fleet-name">${a.emoji} ${a.name}</div>
-        <div class="fleet-desc">${a.desc}</div>
+    <div class="agent-fleet-card ${activeId === a.id ? 'active' : ''}">
+      <div>
+        <div class="af-name">${a.name}</div>
+        <div class="af-desc">${a.desc}</div>
       </div>
-      <div class="fleet-count">${agentUsage[a.id] || 0} calls</div>
+      <div class="af-badge">${agentUsage[a.id] || 0} runs</div>
     </div>`).join('');
 }
 
@@ -1739,7 +1269,6 @@ async function selectPatient(id) {
     const res = await fetch(`${API}/patients/${id}`);
     const p = await res.json();
     selectedPatient = p;
-    messages = [];
     renderPatientHeader(p);
     renderLabs(p);
     renderGaps(p);
@@ -1752,18 +1281,20 @@ async function selectPatient(id) {
       switchMobileTab('consultation');
     }
   } catch {
-    alert('Could not retrieve patient records from API.');
+    alert('Could not retrieve patient data.');
   }
 }
 
+// Fixed Header Rendering with No Awkward Splitting
 function renderPatientHeader(p) {
   document.getElementById('hdr-name').textContent = p.name;
-  document.getElementById('hdr-meta').textContent = `MRN: #${p.id} • ${p.age} years • ${p.gender} • ${p.insurance} • Last Encounter: ${p.last_visit}`;
+  document.getElementById('hdr-meta').textContent = `MRN: #${p.id} • ${p.age} years • ${p.gender} • ${p.insurance || 'Standard'} • Last Encounter: ${p.last_visit || 'Recent'}`;
   
-  const risk = p.risk_score;
+  const risk = p.risk_score || 0.5;
   const riskClass = risk > 0.8 ? 'badge-risk-crit' : risk > 0.6 ? 'badge-risk-high' : risk > 0.4 ? 'badge-risk-med' : 'badge-risk-low';
-  const riskLabel = risk > 0.8 ? 'Critical Risk' : risk > 0.6 ? 'High Risk' : risk > 0.4 ? 'Medium Risk' : 'Controlled Risk';
+  const riskLabel = risk > 0.8 ? 'Critical Risk' : risk > 0.6 ? 'High Risk' : risk > 0.4 ? 'Medium Risk' : 'Low Risk';
   
+  // Safe, clean non-breaking badges
   document.getElementById('hdr-badges').innerHTML = `
     <span class="badge badge-condition">${escHtml(p.condition)}</span>
     <span class="badge ${riskClass}">${riskLabel} (${Math.round(risk * 100)}%)</span>
@@ -1772,19 +1303,19 @@ function renderPatientHeader(p) {
   document.getElementById('stats-row').innerHTML = `
     <div class="stat-card">
       <div class="stat-label">Composite Risk</div>
-      <div class="stat-number" style="color:${risk > 0.6 ? '#f43f5e' : '#10b981'}">${Math.round(risk * 100)}%</div>
+      <div class="stat-number" style="color:${risk > 0.6 ? '#ef4444' : '#10b981'};">${Math.round(risk * 100)}%</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Missed Follow-ups</div>
-      <div class="stat-number" style="color:${p.missed_followups > 1 ? '#f59e0b' : '#10b981'}">${p.missed_followups}</div>
+      <div class="stat-label">Missed Visits</div>
+      <div class="stat-number" style="color:${(p.missed_followups || 0) > 1 ? '#f59e0b' : '#10b981'};">${p.missed_followups || 0}</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Open Care Gaps</div>
-      <div class="stat-number" style="color:#93c5fd">${p.care_gaps.length}</div>
+      <div class="stat-label">Care Gaps</div>
+      <div class="stat-number" style="color:#93c5fd;">${(p.care_gaps || []).length}</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Active Prescriptions</div>
-      <div class="stat-number" style="color:var(--text-secondary)">${p.medications.length}</div>
+      <div class="stat-label">Prescriptions</div>
+      <div class="stat-number" style="color:var(--text-muted);">${(p.medications || []).length}</div>
     </div>
   `;
 }
@@ -1793,21 +1324,17 @@ function renderLabs(p) {
   const labs = p.lab_results || {};
   const labEl = document.getElementById('labs-grid');
   labEl.innerHTML = Object.entries(labs).map(([k, v]) => {
-    let cls = 'ok';
-    let statusText = 'Normal';
-    if (k === 'HbA1c' && v > 8) { cls = 'danger'; statusText = 'Uncontrolled'; }
-    if (k === 'BP' && v) { cls = 'warn'; statusText = 'Elevated'; }
-    if (k === 'BNP' && v > 400) { cls = 'danger'; statusText = 'High Risk'; }
-    if (k === 'eGFR' && v < 30) { cls = 'danger'; statusText = 'Stage 4 CKD'; }
-    if (k === 'Hemoglobin' && v < 12) { cls = 'warn'; statusText = 'Mild Anemia'; }
+    let color = '#34d399';
+    if (k === 'HbA1c' && v > 8) color = '#ef4444';
+    if (k === 'BP' && v) color = '#f59e0b';
+    if (k === 'BNP' && v > 400) color = '#ef4444';
+    if (k === 'eGFR' && v < 30) color = '#ef4444';
+    if (k === 'Hemoglobin' && v < 12) color = '#f59e0b';
 
     return `
-    <div class="lab-box">
-      <div class="lab-header">
-        <span>${k}</span>
-        <span style="color:var(--${cls === 'danger' ? 'danger' : cls === 'warn' ? 'warn' : 'accent-emerald'})">${statusText}</span>
-      </div>
-      <div class="lab-value ${cls}">${v}</div>
+    <div class="lab-card">
+      <div class="lab-title">${escHtml(k)}</div>
+      <div class="lab-val" style="color:${color};">${escHtml(String(v))}</div>
     </div>`;
   }).join('');
   document.getElementById('labs-section').style.display = 'block';
@@ -1815,11 +1342,10 @@ function renderLabs(p) {
 
 function renderGaps(p) {
   const el = document.getElementById('gap-list');
-  const countEl = document.getElementById('gaps-count-badge');
-  countEl.textContent = `${p.care_gaps.length} Actionable`;
-  el.innerHTML = p.care_gaps.map(g => `
-    <li class="gap-entry">
-      <div class="gap-dot"></div>
+  const gaps = p.care_gaps || [];
+  el.innerHTML = gaps.map(g => `
+    <li style="font-size:12px;color:var(--text-main);display:flex;align-items:center;gap:6px;">
+      <span style="color:#f59e0b;">•</span>
       <span>${escHtml(g)}</span>
     </li>
   `).join('');
@@ -1829,20 +1355,17 @@ function renderGaps(p) {
 function renderQuickPrompts(pid) {
   let prompts = QUICK_PROMPTS[pid];
   if (!prompts && selectedPatient) {
-    const cond = selectedPatient.condition || 'General Condition';
+    const cond = selectedPatient.condition || 'General';
     prompts = [
-      `🚨 Formulate immediate clinical action plan for ${cond}`,
-      `💊 Review medication safety and drug-drug interactions for ${selectedPatient.name}`,
-      `📋 Cross-check institutional guidelines (ADA / ACC / KDIGO) and close care gaps`
+      `Formulate immediate clinical care plan for ${cond}`,
+      `Review medication adherence and safety for ${selectedPatient.name}`,
+      `Evaluate clinical guidelines (ADA / ACC / KDIGO) and close care gaps`
     ];
   }
-  if (!prompts) prompts = [
-    "Assess chronic condition risk and recommend protocol",
-    "Review patient medication adherence and care gaps",
-    "Coordinate upcoming appointments and transport support"
-  ];
+  if (!prompts) prompts = ["Assess chronic condition risk", "Review medications", "Schedule follow-up"];
+
   document.getElementById('quick-prompts').innerHTML = prompts.map(q => `
-    <button class="scenario-btn" onclick="setQuery(this)">${escHtml(q)}</button>
+    <button class="btn-scenario" onclick="setQuery(this)">${escHtml(q)}</button>
   `).join('');
 }
 
@@ -1856,9 +1379,8 @@ function clearConversation() {
   const qa = document.getElementById('query-area');
   qa.innerHTML = `
     <div class="welcome-state" id="welcome-state">
-      <div class="welcome-icon-box">🧠</div>
-      <div class="welcome-title">Ready to Deliberate</div>
-      <div class="welcome-sub">Select a clinical prompt above or describe an acute clinical event below to initiate multi-agent orchestration.</div>
+      <div class="welcome-title">Ready for Consultation</div>
+      <div class="welcome-desc">Select a prompt above or describe the patient's symptoms below to run multi-agent evaluation.</div>
     </div>`;
 }
 
@@ -1869,7 +1391,7 @@ function handleKey(e) {
   }
 }
 
-// ── Orchestration & Deliberation Pipeline ─────────────────────────────────────
+// ── Consultation Query ──
 async function sendQuery() {
   const input = document.getElementById('query-input');
   const query = input.value.trim();
@@ -1882,35 +1404,23 @@ async function sendQuery() {
   document.getElementById('welcome-state')?.remove();
   const qa = document.getElementById('query-area');
 
-  // Render Clinician User Query
   const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const currentUser = sessionStorage.getItem('careflow_user') || 'Dr. Sarah Mitchell, MD';
+  const currentUser = sessionStorage.getItem('careflow_user') || 'Dr. Sarah Mitchell';
+
   qa.insertAdjacentHTML('beforeend', `
-    <div class="msg-container">
-      <div class="user-msg-box">
-        <div class="user-msg-meta">
-          <span>👨‍⚕️ ${escHtml(currentUser)}</span>
-          <span>${now}</span>
-        </div>
-        <div>${escHtml(query)}</div>
+    <div class="user-msg">
+      <div class="user-msg-meta">
+        <span>${escHtml(currentUser)}</span>
+        <span>${now}</span>
       </div>
+      <div>${escHtml(query)}</div>
     </div>
   `);
 
-  // Render Live Brainstorming In-flight Animation
-  const pipelineId = 'pipe-' + Date.now();
+  const loadingId = 'load-' + Date.now();
   qa.insertAdjacentHTML('beforeend', `
-    <div class="deliberation-pipeline" id="${pipelineId}">
-      <div class="dp-title">
-        <div class="dp-spinner"></div>
-        <span>Multi-Agent Brainstorming & Guideline Deliberation Active</span>
-      </div>
-      <div class="dp-step-row">
-        <div class="dp-item"><span style="color:var(--accent)">▸</span> Ingesting patient EHR biomarkers and FHIR history...</div>
-        <div class="dp-item"><span style="color:var(--accent-purple)">▸</span> Routing intent across 4 clinical domain agents...</div>
-        <div class="dp-item"><span style="color:var(--accent-emerald)">▸</span> Grounding decision in evidence protocols (ADA / ACC / KDIGO)...</div>
-        <div class="dp-item"><span style="color:var(--warn)">▸</span> Executing tool calling via Model Context Protocol (MCP)...</div>
-      </div>
+    <div id="${loadingId}" style="padding:12px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:6px;font-size:12px;color:var(--text-muted);">
+      Evaluating clinical guidelines and routing to specialized agent...
     </div>
   `);
   qa.scrollTop = qa.scrollHeight;
@@ -1922,111 +1432,64 @@ async function sendQuery() {
       body: JSON.stringify({ patient_id: selectedPatient.id, query })
     });
 
-    document.getElementById(pipelineId)?.remove();
+    document.getElementById(loadingId)?.remove();
 
     if (!res.ok) throw new Error(await res.text());
     const data = await res.json();
 
     const orch = data.orchestrator || {};
     const agentResp = data.agent_response || {};
-    const evalData = data.evaluation || { latency_ms: 380, confidence: 0.92, task_completion: 'complete' };
+    const evalData = data.evaluation || { latency_ms: 350, confidence: 0.9, task_completion: 'complete' };
     const guidelines = data.guidelines_used || [];
 
-    // Update usage counters
     agentUsage[orch.selected_agent] = (agentUsage[orch.selected_agent] || 0) + 1;
     renderAgentGrid(orch.selected_agent);
 
     const agentInfo = AGENTS.find(a => a.id === orch.selected_agent) || AGENTS[1];
-    const urg = (orch.urgency || 'medium').toLowerCase();
-    const urgBg = urg === 'critical' ? 'rgba(244,63,94,0.15)' : urg === 'high' ? 'rgba(251,146,60,0.15)' : 'rgba(245,158,11,0.15)';
-    const urgColor = urg === 'critical' ? '#f43f5e' : urg === 'high' ? '#fb923c' : '#f59e0b';
-
-    // Build Brainstorming Steps Trace
-    const step1R = escHtml(orch.routing_reason || 'Semantic intent analysis matched clinical domain criteria.');
-    const step2G = guidelines.length ? guidelines.map(g => `<span class="guideline-chip">${escHtml(g)}</span>`).join('') : '<span class="guideline-chip">Clinical Safety Baseline Standard</span>';
-    const otherAgents = AGENTS.filter(a => a.id !== orch.selected_agent).map(a => a.name).join(', ');
-    const step3C = `Cross-validated against ${otherAgents}. Safety constraints cleared; no medication or diagnostic contraindications flagged.`;
-    const step4M = `Model Context Protocol (MCP) tool executed. Latency: ${evalData.latency_ms}ms • Completion: 100% • Token Budget: Optimized.`;
+    const urg = (orch.urgency || 'medium').toUpperCase();
 
     const cardHtml = `
-      <div class="msg-container">
-        <div class="agent-msg-box">
-          <!-- Card Header -->
-          <div class="agent-card-header">
-            <div class="agent-lead">
-              <div class="agent-avatar-badge" style="background:${agentInfo.color}18;border-color:${agentInfo.color};color:${agentInfo.color}">
-                ${agentInfo.emoji}
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-title">
+            <span>${agentInfo.name}</span>
+          </div>
+          <div class="agent-meta">
+            <span class="badge" style="background:#1e3a8a33;color:#60a5fa;border-color:#3b82f633;">${urg}</span>
+            <span style="font-size:11px;color:#34d399;font-weight:600;">${Math.round((orch.confidence || 0.9) * 100)}% Confidence</span>
+          </div>
+        </div>
+
+        <!-- Trace Accordion -->
+        <div class="agent-body">
+          <div class="trace-box">
+            <div class="trace-toggle" onclick="toggleTrace(this)">
+              <span>Clinical Reasoning Trace (Guidelines & Routing)</span>
+              <span class="trace-arrow">▼ Show</span>
+            </div>
+            <div class="trace-content" style="display:none;">
+              <div>
+                <div class="trace-step-title">1. Routing Decision</div>
+                <div class="trace-step-text">${escHtml(orch.routing_reason || 'Matched clinical domain requirements.')}</div>
               </div>
               <div>
-                <div class="agent-title-text">${agentInfo.name}</div>
-                <div class="agent-title-sub">${agentInfo.desc}</div>
-              </div>
-            </div>
-            <div class="routing-metrics">
-              <span class="urgency-tag" style="background:${urgBg};color:${urgColor};border:1px solid ${urgColor}40">${urg.toUpperCase()} PRIORITY</span>
-              <span class="confidence-tag">${Math.round((orch.confidence || 0.9) * 100)}% Confidence</span>
-            </div>
-          </div>
-
-          <!-- 🧠 Interactive Agent Deliberation & Brainstorming Trace -->
-          <div class="brainstorming-card">
-            <div class="brainstorm-toggle" onclick="toggleBrainstorm(this)">
-              <span>🧠 Multi-Agent Deliberation & Brainstorming Trace (4 Stages)</span>
-              <span class="toggle-arrow">▼ Expand Trace</span>
-            </div>
-            <div class="brainstorm-steps" style="display:none">
-              <div class="step-node">
-                <div class="step-num">1</div>
-                <div class="step-content">
-                  <div class="step-title">Stage 1: Clinical Triage & Semantic Routing</div>
-                  <div class="step-desc">${step1R}</div>
-                </div>
-              </div>
-              <div class="step-node">
-                <div class="step-num">2</div>
-                <div class="step-content">
-                  <div class="step-title">Stage 2: Guideline Knowledge Grounding (RAG)</div>
-                  <div class="step-desc">Grounded in verified institutional guidelines:</div>
-                  <div class="guideline-chip-row">${step2G}</div>
-                </div>
-              </div>
-              <div class="step-node">
-                <div class="step-num">3</div>
-                <div class="step-content">
-                  <div class="step-title">Stage 3: Cross-Agent Safety Verification</div>
-                  <div class="step-desc">${step3C}</div>
-                </div>
-              </div>
-              <div class="step-node">
-                <div class="step-num">4</div>
-                <div class="step-content">
-                  <div class="step-title">Stage 4: Execution & Tool Calling (MCP)</div>
-                  <div class="step-desc">${step4M}</div>
-                </div>
+                <div class="trace-step-title">2. Clinical Protocols Evaluated</div>
+                <div class="trace-step-text">${guidelines.length ? guidelines.map(g => escHtml(g)).join('<br>') : 'Institutional Standard Protocol'}</div>
               </div>
             </div>
           </div>
 
-          <!-- Action Taken Summary -->
-          <div class="agent-card-body">
-            <div class="action-callout">
-              <div class="action-title">Action Executed</div>
-              <div class="action-text">${escHtml(agentResp.action_taken || 'Clinical assessment formulated successfully.')}</div>
-            </div>
-
-            <!-- Deliverables -->
-            ${renderAgentDeliverables(orch.selected_agent, agentResp)}
+          <div class="action-box">
+            <div class="action-box-title">Clinical Assessment & Action</div>
+            <div class="action-box-text">${escHtml(agentResp.action_taken || 'Assessment formulated.')}</div>
           </div>
 
-          <!-- Footer Audit -->
-          <div class="agent-footer">
-            <div style="display:flex;gap:12px;align-items:center">
-              <span>⏱ ${evalData.latency_ms}ms</span>
-              <span>✅ Task ${evalData.task_completion}</span>
-              <span style="color:var(--accent-emerald)">🛡️ Verified</span>
-            </div>
-            <button class="copy-btn" onclick="copyCarePlan(this)">📋 Copy Care Plan</button>
-          </div>
+          ${renderAgentDeliverables(orch.selected_agent, agentResp)}
+        </div>
+
+        <div class="agent-footer">
+          <span>Latency: ${evalData.latency_ms}ms • Task: ${evalData.task_completion}</span>
+          <button class="btn-copy" onclick="copyCarePlan(this)">Copy Summary</button>
         </div>
       </div>
     `;
@@ -2035,114 +1498,62 @@ async function sendQuery() {
     updateEvalSummary();
 
   } catch (err) {
-    document.getElementById(pipelineId)?.remove();
-    qa.insertAdjacentHTML('beforeend', `
-      <div class="msg-container">
-        <div class="user-msg-box" style="background:rgba(244,63,94,0.15);border-color:var(--danger);color:#fecdd3">
-          <strong>Orchestration Notice:</strong> ${escHtml(err.message)}
-        </div>
-      </div>
-    `);
+    document.getElementById(loadingId)?.remove();
+    qa.insertAdjacentHTML('beforeend', `<div style="color:#ef4444;font-size:12px;padding:8px;">Error: ${escHtml(err.message)}</div>`);
   }
 
   btn.disabled = false;
   qa.scrollTop = qa.scrollHeight;
 }
 
-function toggleBrainstorm(btn) {
-  const steps = btn.nextElementSibling;
-  const arrow = btn.querySelector('.toggle-arrow');
-  if (steps.style.display === 'none') {
-    steps.style.display = 'flex';
-    arrow.textContent = '▲ Collapse Trace';
+function toggleTrace(btn) {
+  const content = btn.nextElementSibling;
+  const arrow = btn.querySelector('.trace-arrow');
+  if (content.style.display === 'none') {
+    content.style.display = 'flex';
+    arrow.textContent = '▲ Hide';
   } else {
-    steps.style.display = 'none';
-    arrow.textContent = '▼ Expand Trace';
+    content.style.display = 'none';
+    arrow.textContent = '▼ Show';
   }
 }
 
 function renderAgentDeliverables(agentId, resp) {
-  let html = '<div class="deliverables-grid">';
+  let html = '<div style="display:flex;flex-direction:column;gap:8px;">';
 
   if (agentId === 'patient_navigator') {
-    if (resp.steps?.length) {
-      html += buildTaskList('Prescribed Navigation Steps', resp.steps);
-    }
+    if (resp.steps?.length) html += makeDeliverableList('Prescribed Steps', resp.steps);
     if (resp.patient_message) {
-      html += `
-        <div class="deliverable-section">
-          <div class="deliverable-head">💬 Patient Outreach Script</div>
-          <p style="font-size:12.5px;color:#93c5fd;font-style:italic;line-height:1.6">"${escHtml(resp.patient_message)}"</p>
-        </div>`;
+      html += `<div class="deliverables-box"><div class="deliverables-title">Patient Communication</div><div style="font-size:12.5px;color:#93c5fd;font-style:italic;">"${escHtml(resp.patient_message)}"</div></div>`;
     }
     if (resp.next_appointment) {
-      html += `
-        <div class="deliverable-section">
-          <div class="deliverable-head">📅 Scheduled Appointment</div>
-          <p style="font-size:13px;font-weight:600;color:var(--text-primary)">${escHtml(resp.next_appointment)}</p>
-        </div>`;
+      html += `<div class="deliverables-box"><div class="deliverables-title">Next Scheduled Appointment</div><div style="font-size:13px;font-weight:600;">${escHtml(resp.next_appointment)}</div></div>`;
     }
   } else if (agentId === 'care_coordinator') {
-    if (resp.referrals?.length) {
-      html += buildTaskList('Specialist Referrals Initiated', resp.referrals);
-    }
-    if (resp.care_gaps_addressed?.length) {
-      html += buildTaskList('Care Gaps Addressed', resp.care_gaps_addressed);
-    }
-    if (resp.task_assignments?.length) {
-      const items = resp.task_assignments.map(t => `${t.role}: ${t.task} (Deadline: ${t.deadline})`);
-      html += buildTaskList('Team Task Delegation', items);
-    }
+    if (resp.referrals?.length) html += makeDeliverableList('Specialist Referrals', resp.referrals);
+    if (resp.care_gaps_addressed?.length) html += makeDeliverableList('Care Gaps Addressed', resp.care_gaps_addressed);
     if (resp.follow_up_plan) {
-      html += `
-        <div class="deliverable-section">
-          <div class="deliverable-head">🔄 Multidisciplinary Follow-up Plan</div>
-          <p style="font-size:12.5px;line-height:1.6">${escHtml(resp.follow_up_plan)}</p>
-        </div>`;
+      html += `<div class="deliverables-box"><div class="deliverables-title">Care Management Plan</div><div style="font-size:12.5px;">${escHtml(resp.follow_up_plan)}</div></div>`;
     }
   } else if (agentId === 'quality_analyst') {
     if (resp.clinical_rationale) {
-      html += `
-        <div class="deliverable-section">
-          <div class="deliverable-head">📊 Clinical Risk & Guideline Rationale</div>
-          <p style="font-size:12.5px;line-height:1.6">${escHtml(resp.clinical_rationale)}</p>
-        </div>`;
+      html += `<div class="deliverables-box"><div class="deliverables-title">Quality & Risk Analysis</div><div style="font-size:12.5px;">${escHtml(resp.clinical_rationale)}</div></div>`;
     }
-    if (resp.quality_measures_impacted?.length) {
-      html += buildTaskList('Quality & Compliance Measures Impacted', resp.quality_measures_impacted);
-    }
-    if (resp.risk_score_delta) {
-      html += `
-        <div class="deliverable-section">
-          <div class="deliverable-head">⚠️ Risk Trajectory Assessment</div>
-          <p style="font-size:12.5px;color:#f59e0b">${escHtml(resp.risk_score_delta)}</p>
-        </div>`;
-    }
+    if (resp.quality_measures_impacted?.length) html += makeDeliverableList('Measures Tracked', resp.quality_measures_impacted);
   } else if (agentId === 'ai_nurse') {
-    if (resp.medication_guidance?.length) {
-      html += buildTaskList('Medication Safety & Adherence Orders', resp.medication_guidance);
-    }
-    if (resp.follow_up_tasks?.length) {
-      html += buildTaskList('Clinical Nursing Follow-up Tasks', resp.follow_up_tasks);
-    }
-    if (resp.visit_prep_notes) {
-      html += `
-        <div class="deliverable-section">
-          <div class="deliverable-head">🩺 Clinician Visit Briefing</div>
-          <p style="font-size:12.5px;line-height:1.6">${escHtml(resp.visit_prep_notes)}</p>
-        </div>`;
-    }
+    if (resp.medication_guidance?.length) html += makeDeliverableList('Medication Safety Guidance', resp.medication_guidance);
+    if (resp.follow_up_tasks?.length) html += makeDeliverableList('Clinical Nursing Tasks', resp.follow_up_tasks);
   }
 
   html += '</div>';
   return html;
 }
 
-function buildTaskList(title, items) {
+function makeDeliverableList(title, items) {
   return `
-    <div class="deliverable-section">
-      <div class="deliverable-head">${escHtml(title)}</div>
-      <ul class="interactive-task-list">
+    <div class="deliverables-box">
+      <div class="deliverables-title">${escHtml(title)}</div>
+      <ul class="task-list">
         ${items.map(item => `
           <li class="task-item">
             <input type="checkbox">
@@ -2155,37 +1566,35 @@ function buildTaskList(title, items) {
 }
 
 function copyCarePlan(btn) {
-  const card = btn.closest('.agent-msg-box');
-  const action = card.querySelector('.action-text')?.textContent || '';
-  navigator.clipboard.writeText(`CareFlow Clinical Plan:\n${action}`);
-  btn.textContent = '✓ Copied!';
-  setTimeout(() => btn.textContent = '📋 Copy Care Plan', 2000);
+  const card = btn.closest('.agent-card');
+  const action = card.querySelector('.action-box-text')?.textContent || '';
+  navigator.clipboard.writeText(`CareFlow Assessment:\n${action}`);
+  btn.textContent = 'Copied';
+  setTimeout(() => btn.textContent = 'Copy Summary', 2000);
 }
 
 function exportSoapNote() {
   if (!selectedPatient) return;
-  const soap = `SOAP NOTE — CAREFLOW ENTERPRISE
+  const soap = `SOAP NOTE — CAREFLOW CLINICAL
 PATIENT: ${selectedPatient.name} (MRN #${selectedPatient.id})
 AGE/GENDER: ${selectedPatient.age} / ${selectedPatient.gender}
 PRIMARY DIAGNOSIS: ${selectedPatient.condition}
-COMPOSITE RISK SCORE: ${Math.round(selectedPatient.risk_score * 100)}%
+RISK SCORE: ${Math.round((selectedPatient.risk_score || 0.5) * 100)}%
 
 SUBJECTIVE & CLINICAL CONTEXT:
-Patient presenting with ${selectedPatient.condition}. Missed visits: ${selectedPatient.missed_followups}. Active care gaps: ${selectedPatient.care_gaps.join(', ')}.
+Diagnosed with ${selectedPatient.condition}. Missed follow-ups: ${selectedPatient.missed_followups || 0}. Open care gaps: ${(selectedPatient.care_gaps || []).join(', ')}.
 
 OBJECTIVE LAB FINDINGS:
 ${Object.entries(selectedPatient.lab_results || {}).map(([k,v]) => `${k}: ${v}`).join('\n')}
 
 ACTIVE MEDICATIONS:
-${selectedPatient.medications.join(', ')}
+${(selectedPatient.medications || []).join(', ')}
 
-ASSESSMENT & MULTI-AGENT PLAN:
-Care plan formulated via CareFlow Multi-Agent System (ADA / ACC / KDIGO protocols).
-Refer to active consultation log for specialist orders and outreach directives.
-Generated by: CareFlow Enterprise Clinical Core`;
+ASSESSMENT & PLAN:
+Care plan evaluated against ADA / ACC / KDIGO protocols via CareFlow Multi-Agent System.`;
 
   navigator.clipboard.writeText(soap);
-  alert('SOAP Note copied to clipboard! Ready to paste into EHR.');
+  alert('SOAP Note copied to clipboard.');
 }
 
 async function updateEvalSummary() {
@@ -2196,59 +1605,44 @@ async function updateEvalSummary() {
 
     const el = document.getElementById('eval-summary');
     el.innerHTML = `
-      <div class="telemetry-row">
-        <span>Total Evaluated Queries</span>
-        <span class="telemetry-val">${data.total_queries}</span>
+      <div class="tel-row">
+        <span>Queries Evaluated</span>
+        <span class="tel-val">${data.total_queries}</span>
       </div>
-      <div class="telemetry-row">
-        <span>Average Response Latency</span>
-        <span class="telemetry-val">${data.avg_latency_ms}ms</span>
+      <div class="tel-row">
+        <span>Average Latency</span>
+        <span class="tel-val">${data.avg_latency_ms}ms</span>
       </div>
-      <div class="telemetry-row">
-        <span>Routing Confidence (Mean)</span>
-        <span class="telemetry-val">${Math.round(data.avg_confidence * 100)}%</span>
-      </div>
-      <div class="telemetry-row">
-        <span>Task Completion Guarantee</span>
-        <span class="telemetry-val" style="color:var(--accent-emerald)">100%</span>
-      </div>
-      <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--border)">
-        <div style="font-size:10px;font-family:var(--font-mono);color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">Agent Workload Balance</div>
-        ${Object.entries(data.agent_usage || {}).map(([k,v]) => `
-          <div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0">
-            <span style="color:var(--text-secondary)">${AGENTS.find(a=>a.id===k)?.name || k}</span>
-            <span style="font-family:var(--font-mono);color:var(--accent)">${v}</span>
-          </div>
-        `).join('')}
+      <div class="tel-row">
+        <span>Routing Confidence</span>
+        <span class="tel-val">${Math.round(data.avg_confidence * 100)}%</span>
       </div>
     `;
   } catch {}
 }
 
-function switchMobileTab(tabName) {
+// ── Mobile Tab Navigation ──
+function switchMobileTab(tab) {
   const layout = document.getElementById('main-layout');
-  if (layout) {
-    layout.setAttribute('data-active-tab', tabName);
-  }
+  if (layout) layout.setAttribute('data-tab', tab);
+
   document.querySelectorAll('.mobile-tab-btn').forEach(btn => btn.classList.remove('active'));
-  const activeBtn = document.getElementById(`tab-btn-${tabName}`);
-  if (activeBtn) {
-    activeBtn.classList.add('active');
-  }
+  const activeBtn = document.getElementById(`tab-btn-${tab}`);
+  if (activeBtn) activeBtn.classList.add('active');
 }
 
 function escHtml(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── Universal Authentication (Accepts ANY username & password) ────────────────
+// ── Authentication ──
 function checkAuth() {
   const isAuth = sessionStorage.getItem('careflow_authenticated');
   const overlay = document.getElementById('login-overlay');
   if (isAuth === 'true') {
     overlay.style.display = 'none';
-    const user = sessionStorage.getItem('careflow_user') || 'Dr. Sarah Mitchell, MD';
-    const role = sessionStorage.getItem('careflow_role') || 'Attending Physician';
+    const user = sessionStorage.getItem('careflow_user') || 'Dr. Sarah Mitchell';
+    const role = sessionStorage.getItem('careflow_role') || 'Attending';
     document.getElementById('auth-username-display').textContent = user;
     document.getElementById('auth-role-display').textContent = role;
     boot();
@@ -2259,11 +1653,10 @@ function checkAuth() {
 
 async function handleLoginSubmit(e) {
   e.preventDefault();
-  const u = document.getElementById('login-username').value.trim() || 'Dr. Sarah Mitchell, MD';
-  const role = document.getElementById('login-role').value || 'Attending Physician';
+  const u = document.getElementById('login-username').value.trim() || 'Dr. Sarah Mitchell';
+  const role = document.getElementById('login-role').value || 'Attending';
   const p = document.getElementById('login-password').value.trim() || 'demo';
 
-  // Universal acceptance for all interviewers, clients & reviewers
   sessionStorage.setItem('careflow_authenticated', 'true');
   sessionStorage.setItem('careflow_user', u);
   sessionStorage.setItem('careflow_role', role);
@@ -2281,8 +1674,8 @@ async function handleLoginSubmit(e) {
 
 function instantGuestLogin() {
   sessionStorage.setItem('careflow_authenticated', 'true');
-  sessionStorage.setItem('careflow_user', 'Clinical AI Reviewer / Client');
-  sessionStorage.setItem('careflow_role', 'Chief Medical Officer (CMO)');
+  sessionStorage.setItem('careflow_user', 'Clinical Reviewer');
+  sessionStorage.setItem('careflow_role', 'Attending');
   checkAuth();
 }
 
@@ -2293,7 +1686,7 @@ function handleLogout() {
   checkAuth();
 }
 
-// ── EHR Patient Intake & AI Generator Modal Handlers ─────────────────────────
+// ── Intake Modal Handlers ──
 function openIntakeModal() {
   document.getElementById('intake-modal').style.display = 'flex';
 }
@@ -2304,19 +1697,19 @@ function closeIntakeModal() {
 
 function switchIntakeMode(mode) {
   const aiTab = document.getElementById('intake-tab-ai');
-  const manTab = document.getElementById('intake-tab-manual');
+  const manTab = document.getElementById('intake-tab-man');
   const aiForm = document.getElementById('ai-intake-form');
   const manForm = document.getElementById('manual-intake-form');
 
   if (mode === 'ai') {
     aiTab.classList.add('active');
     manTab.classList.remove('active');
-    aiForm.style.display = 'flex';
+    aiForm.style.display = 'block';
     manForm.style.display = 'none';
   } else {
     manTab.classList.add('active');
     aiTab.classList.remove('active');
-    manForm.style.display = 'flex';
+    manForm.style.display = 'block';
     aiForm.style.display = 'none';
   }
 }
@@ -2332,7 +1725,7 @@ async function handleAiPatientIntake(e) {
 
   const btn = document.getElementById('ai-intake-btn');
   btn.disabled = true;
-  btn.textContent = '✨ Synthesizing EHR Profile with AI...';
+  btn.textContent = 'Generating Profile...';
 
   try {
     const res = await fetch(`${API}/patients/ai-generate`, {
@@ -2343,21 +1736,18 @@ async function handleAiPatientIntake(e) {
     if (!res.ok) throw new Error(await res.text());
     const data = await res.json();
     
-    // Refresh all patients from PostgreSQL/SQLite database
     const pRes = await fetch(`${API}/patients`);
     allPatients = await pRes.json();
     renderPatientList(allPatients);
     document.getElementById('patient-count-pill').textContent = `${allPatients.length} Patients`;
 
     closeIntakeModal();
-    // Auto-select newly ingested patient
     selectPatient(data.patient.id);
-    alert(`✅ Ingestion Successful!\nPatient ${data.patient.name} (#${data.patient.id}) successfully synthesized by AI and stored in database.`);
   } catch (err) {
-    alert('Failed to synthesize patient: ' + err.message);
+    alert('Intake Error: ' + err.message);
   } finally {
     btn.disabled = false;
-    btn.textContent = '✨ Generate EHR Profile with AI & Save to PostgreSQL →';
+    btn.textContent = 'Generate & Save to Database';
   }
 }
 
@@ -2380,7 +1770,7 @@ async function handleManualPatientIntake(e) {
 
   const btn = document.getElementById('man-intake-btn');
   btn.disabled = true;
-  btn.textContent = '💾 Saving to Database...';
+  btn.textContent = 'Saving Record...';
 
   try {
     const res = await fetch(`${API}/patients`, {
@@ -2402,16 +1792,15 @@ async function handleManualPatientIntake(e) {
 
     closeIntakeModal();
     selectPatient(data.patient.id);
-    alert(`✅ Patient ${data.patient.name} (#${data.patient.id}) saved to PostgreSQL database!`);
   } catch (err) {
-    alert('Error saving patient: ' + err.message);
+    alert('Save Error: ' + err.message);
   } finally {
     btn.disabled = false;
-    btn.textContent = '💾 Save Patient to PostgreSQL Database →';
+    btn.textContent = 'Save Patient Record';
   }
 }
 
-// Initialize on load
+// Initial check
 checkAuth();
 </script>
 </body>

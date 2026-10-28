@@ -1255,6 +1255,26 @@
   ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  .intake-btn {
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.2), rgba(139, 92, 246, 0.2));
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .intake-btn:hover {
+    background: var(--accent);
+    color: #070a12;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+  }
 </style>
 </head>
 <body>
@@ -1311,6 +1331,129 @@
   </div>
 </div>
 
+<!-- ── Clinical Patient Intake & AI Generator Modal ── -->
+<div id="intake-modal" class="login-overlay" style="display:none">
+  <div class="login-modal" style="max-width: 540px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#00e5ff,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:18px">🩺</div>
+        <div>
+          <h2 style="font-size:17px;font-weight:800;color:var(--text-primary)">EHR Patient Intake & AI Generator</h2>
+          <p style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">PostgreSQL & FHIR R4 Core Persistence</p>
+        </div>
+      </div>
+      <button onclick="closeIntakeModal()" style="background:transparent;border:none;color:var(--text-muted);font-size:20px;cursor:pointer">✕</button>
+    </div>
+
+    <!-- Mode Switcher -->
+    <div style="display:flex;gap:8px;background:var(--bg-card);padding:4px;border-radius:8px;border:1px solid var(--border);margin-bottom:8px">
+      <button id="intake-tab-ai" class="filter-pill active" style="flex:1;padding:8px" onclick="switchIntakeMode('ai')">✨ AI-Assisted Intake</button>
+      <button id="intake-tab-manual" class="filter-pill" style="flex:1;padding:8px" onclick="switchIntakeMode('manual')">📝 Manual EHR Entry</button>
+    </div>
+
+    <!-- AI Intake Form -->
+    <form id="ai-intake-form" onsubmit="handleAiPatientIntake(event)" style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="login-input-group">
+          <label class="login-label">Patient Full Name *</label>
+          <input type="text" id="ai-intake-name" required placeholder="e.g. Vikram Patel" class="login-input">
+        </div>
+        <div class="login-input-group">
+          <label class="login-label">Patient ID / MRN (Optional)</label>
+          <input type="text" id="ai-intake-id" placeholder="Auto-assigned (e.g. P006)" class="login-input">
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="login-input-group">
+          <label class="login-label">Age</label>
+          <input type="number" id="ai-intake-age" value="52" min="1" max="115" class="login-input">
+        </div>
+        <div class="login-input-group">
+          <label class="login-label">Gender</label>
+          <select id="ai-intake-gender" class="login-input">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="login-input-group">
+        <label class="login-label">Chief Diagnosis / Clinical Complaint *</label>
+        <input type="text" id="ai-intake-condition" required placeholder="e.g. Chronic Kidney Disease Stage 3 with uncontrolled hypertension" class="login-input">
+      </div>
+
+      <div class="login-input-group">
+        <label class="login-label">Clinical Intake Notes & Symptoms (Optional)</label>
+        <textarea id="ai-intake-notes" placeholder="e.g. Patient reports bilateral foot edema, fatigue, and missed visits..." rows="2" style="height:55px;font-size:12px"></textarea>
+      </div>
+
+      <button type="submit" id="ai-intake-btn" class="login-submit-btn" style="margin-top:4px">
+        ✨ Generate EHR Profile with AI & Save to PostgreSQL →
+      </button>
+    </form>
+
+    <!-- Manual Intake Form -->
+    <form id="manual-intake-form" onsubmit="handleManualPatientIntake(event)" style="display:none;flex-direction:column;gap:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="login-input-group">
+          <label class="login-label">Patient Full Name *</label>
+          <input type="text" id="man-intake-name" required placeholder="e.g. Ananya Das" class="login-input">
+        </div>
+        <div class="login-input-group">
+          <label class="login-label">Patient ID / MRN</label>
+          <input type="text" id="man-intake-id" placeholder="e.g. P007" class="login-input">
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div class="login-input-group">
+          <label class="login-label">Age</label>
+          <input type="number" id="man-intake-age" value="48" class="login-input">
+        </div>
+        <div class="login-input-group">
+          <label class="login-label">Gender</label>
+          <select id="man-intake-gender" class="login-input">
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="login-input-group">
+          <label class="login-label">Risk (0.0-1.0)</label>
+          <input type="number" step="0.05" id="man-intake-risk" value="0.65" min="0" max="1" class="login-input">
+        </div>
+      </div>
+
+      <div class="login-input-group">
+        <label class="login-label">Primary Condition *</label>
+        <input type="text" id="man-intake-condition" required placeholder="e.g. Hypertension + CKD Stage 3" class="login-input">
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="login-input-group">
+          <label class="login-label">Blood Pressure (BP)</label>
+          <input type="text" id="man-intake-bp" value="138/88" class="login-input">
+        </div>
+        <div class="login-input-group">
+          <label class="login-label">Primary Lab (e.g. HbA1c)</label>
+          <input type="text" id="man-intake-lab" value="7.8" class="login-input">
+        </div>
+      </div>
+
+      <div class="login-input-group">
+        <label class="login-label">Medications (comma-separated)</label>
+        <input type="text" id="man-intake-meds" value="Metformin 500mg, Lisinopril 10mg" class="login-input">
+      </div>
+
+      <button type="submit" id="man-intake-btn" class="login-submit-btn" style="margin-top:4px">
+        💾 Save Patient to PostgreSQL Database →
+      </button>
+    </form>
+  </div>
+</div>
+
 <!-- ── Enterprise Top Header ── -->
 <header>
   <div class="header-left">
@@ -1364,7 +1507,10 @@
     <div class="sidebar-header">
       <div class="sidebar-headline">
         <span class="sidebar-title">EHR Patient Roster</span>
-        <span class="patient-count-badge" id="patient-count-pill">5 Patients</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="patient-count-badge" id="patient-count-pill">5 Patients</span>
+          <button class="intake-btn" onclick="openIntakeModal()">+ Intake</button>
+        </div>
       </div>
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
@@ -1681,7 +1827,16 @@ function renderGaps(p) {
 }
 
 function renderQuickPrompts(pid) {
-  const prompts = QUICK_PROMPTS[pid] || [
+  let prompts = QUICK_PROMPTS[pid];
+  if (!prompts && selectedPatient) {
+    const cond = selectedPatient.condition || 'General Condition';
+    prompts = [
+      `🚨 Formulate immediate clinical action plan for ${cond}`,
+      `💊 Review medication safety and drug-drug interactions for ${selectedPatient.name}`,
+      `📋 Cross-check institutional guidelines (ADA / ACC / KDIGO) and close care gaps`
+    ];
+  }
+  if (!prompts) prompts = [
     "Assess chronic condition risk and recommend protocol",
     "Review patient medication adherence and care gaps",
     "Coordinate upcoming appointments and transport support"
@@ -2136,6 +2291,124 @@ function handleLogout() {
   sessionStorage.removeItem('careflow_user');
   sessionStorage.removeItem('careflow_role');
   checkAuth();
+}
+
+// ── EHR Patient Intake & AI Generator Modal Handlers ─────────────────────────
+function openIntakeModal() {
+  document.getElementById('intake-modal').style.display = 'flex';
+}
+
+function closeIntakeModal() {
+  document.getElementById('intake-modal').style.display = 'none';
+}
+
+function switchIntakeMode(mode) {
+  const aiTab = document.getElementById('intake-tab-ai');
+  const manTab = document.getElementById('intake-tab-manual');
+  const aiForm = document.getElementById('ai-intake-form');
+  const manForm = document.getElementById('manual-intake-form');
+
+  if (mode === 'ai') {
+    aiTab.classList.add('active');
+    manTab.classList.remove('active');
+    aiForm.style.display = 'flex';
+    manForm.style.display = 'none';
+  } else {
+    manTab.classList.add('active');
+    aiTab.classList.remove('active');
+    manForm.style.display = 'flex';
+    aiForm.style.display = 'none';
+  }
+}
+
+async function handleAiPatientIntake(e) {
+  e.preventDefault();
+  const name = document.getElementById('ai-intake-name').value.trim();
+  const id = document.getElementById('ai-intake-id').value.trim();
+  const age = parseInt(document.getElementById('ai-intake-age').value) || 52;
+  const gender = document.getElementById('ai-intake-gender').value;
+  const condition = document.getElementById('ai-intake-condition').value.trim();
+  const notes = document.getElementById('ai-intake-notes').value.trim();
+
+  const btn = document.getElementById('ai-intake-btn');
+  btn.disabled = true;
+  btn.textContent = '✨ Synthesizing EHR Profile with AI...';
+
+  try {
+    const res = await fetch(`${API}/patients/ai-generate`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name, id, age, gender, condition, notes })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    
+    // Refresh all patients from PostgreSQL/SQLite database
+    const pRes = await fetch(`${API}/patients`);
+    allPatients = await pRes.json();
+    renderPatientList(allPatients);
+    document.getElementById('patient-count-pill').textContent = `${allPatients.length} Patients`;
+
+    closeIntakeModal();
+    // Auto-select newly ingested patient
+    selectPatient(data.patient.id);
+    alert(`✅ Ingestion Successful!\nPatient ${data.patient.name} (#${data.patient.id}) successfully synthesized by AI and stored in database.`);
+  } catch (err) {
+    alert('Failed to synthesize patient: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✨ Generate EHR Profile with AI & Save to PostgreSQL →';
+  }
+}
+
+async function handleManualPatientIntake(e) {
+  e.preventDefault();
+  const name = document.getElementById('man-intake-name').value.trim();
+  const id = document.getElementById('man-intake-id').value.trim();
+  const age = parseInt(document.getElementById('man-intake-age').value) || 48;
+  const gender = document.getElementById('man-intake-gender').value;
+  const condition = document.getElementById('man-intake-condition').value.trim();
+  const risk_score = parseFloat(document.getElementById('man-intake-risk').value) || 0.65;
+  const bp = document.getElementById('man-intake-bp').value.trim();
+  const lab = document.getElementById('man-intake-lab').value.trim();
+  const medsStr = document.getElementById('man-intake-meds').value.trim();
+  const meds = medsStr ? medsStr.split(',').map(m => m.trim()) : [];
+
+  const lab_results = {};
+  if (bp) lab_results['BP'] = bp;
+  if (lab) lab_results['HbA1c'] = lab;
+
+  const btn = document.getElementById('man-intake-btn');
+  btn.disabled = true;
+  btn.textContent = '💾 Saving to Database...';
+
+  try {
+    const res = await fetch(`${API}/patients`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        name, id, age, gender, condition, risk_score,
+        medications: meds,
+        lab_results: lab_results
+      })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+
+    const pRes = await fetch(`${API}/patients`);
+    allPatients = await pRes.json();
+    renderPatientList(allPatients);
+    document.getElementById('patient-count-pill').textContent = `${allPatients.length} Patients`;
+
+    closeIntakeModal();
+    selectPatient(data.patient.id);
+    alert(`✅ Patient ${data.patient.name} (#${data.patient.id}) saved to PostgreSQL database!`);
+  } catch (err) {
+    alert('Error saving patient: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💾 Save Patient to PostgreSQL Database →';
+  }
 }
 
 // Initialize on load

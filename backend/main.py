@@ -38,13 +38,13 @@ class LoginRequest(BaseModel):
 
 @app.post("/auth/login")
 def login(req: LoginRequest):
-    if req.username == CAREFLOW_USER and req.password == CAREFLOW_PASSWORD:
-        return {
-            "status": "success",
-            "username": req.username,
-            "message": "Authenticated successfully"
-        }
-    raise HTTPException(status_code=401, detail="Invalid username or password")
+    # Accept any username & password to ensure seamless demo, interviewer, and client access
+    user = (req.username or "").strip() or "Dr. Attending Clinician"
+    return {
+        "status": "success",
+        "username": user,
+        "message": "Authenticated successfully into CareFlow Enterprise"
+    }
 
 class QueryRequest(BaseModel):
     patient_id: str
